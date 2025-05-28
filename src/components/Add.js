@@ -1,3 +1,4 @@
+// src/components/Add.js
 import React, { useState, useEffect } from "react";
 import { ResultCard } from "./ResultCard";
 import { motion } from "framer-motion";
@@ -15,12 +16,12 @@ export const Add = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // 1) Обработчик только обновляет query
+  // 1) onChange теперь только обновляет query
   const onChange = (e) => {
     setQuery(e.target.value);
   };
 
-  // 2) Хук запускает fetch при каждом изменении query
+  // 2) useEffect запускает fetch при каждом изменении query
   useEffect(() => {
     if (!query) {
       setResults([]);
@@ -28,13 +29,16 @@ export const Add = () => {
     }
 
     setLoading(true);
-    fetch(
-      `https://api.themoviedb.org/3/search/movie?api_key=${
-        process.env.REACT_APP_TMDB_KEY
-      }&language=en-US&page=1&include_adult=false&query=${encodeURIComponent(
-        query
-      )}`
-    )
+
+    const url = `https://api.themoviedb.org/3/search/movie?api_key=${
+      process.env.REACT_APP_TMDB_KEY
+    }&language=en-US&page=1&include_adult=false&query=${encodeURIComponent(
+      query
+    )}`;
+    // Для отладки можно раскомментировать:
+    // console.log("Searching URL:", url);
+
+    fetch(url)
       .then((res) => res.json())
       .then((data) => {
         setResults(Array.isArray(data.results) ? data.results : []);
