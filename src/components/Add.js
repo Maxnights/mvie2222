@@ -35,8 +35,9 @@ export const Add = () => {
     }&language=en-US&page=1&include_adult=false&query=${encodeURIComponent(
       query
     )}`;
-    // Для отладки можно раскомментировать:
-    // console.log("Searching URL:", url);
+
+    // === DEBUG PANEL ===
+    console.log("Searching URL:", url);
 
     fetch(url)
       .then((res) => res.json())
@@ -44,62 +45,86 @@ export const Add = () => {
         setResults(Array.isArray(data.results) ? data.results : []);
         setLoading(false);
       })
-      .catch(() => {
+      .catch((err) => {
+        console.error("Search error:", err);
         setResults([]);
         setLoading(false);
       });
   }, [query]);
 
   return (
-    <motion.div
-      className="add-page"
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: -20 }}
-      transition={{ duration: 0.4 }}
-    >
-      {/* Hero Banner с поиском */}
-      <section className="search-hero">
-        <div className="search-hero-bg" />
-        <div className="search-hero-content container">
-          <h2 className="search-hero-title">Find Your Next Movie</h2>
-          <div className="search-box">
-            <motion.i
-              className="fas fa-search search-icon"
-              whileHover={{ scale: 1.2 }}
-              transition={{ duration: 0.2 }}
-            />
-            <input
-              className="search-input"
-              type="text"
-              placeholder="Search for a movie"
-              value={query}
-              onChange={onChange}
-            />
-          </div>
-        </div>
-      </section>
-
-      {/* Результаты или Skeleton */}
-      <div className="container">
-        {loading ? (
-          <div className="movie-grid">
-            {Array.from({ length: 8 }).map((_, i) => (
-              <SkeletonCard key={i} />
-            ))}
-          </div>
-        ) : results.length > 0 ? (
-          <ul className="results movie-grid">
-            {results.map((movie) => (
-              <li key={movie.id}>
-                <ResultCard movie={movie} />
-              </li>
-            ))}
-          </ul>
-        ) : (
-          query && <h2 className="no-movies">No movies found!</h2>
-        )}
+    <>
+      {/* === DEBUG PANEL ON SCREEN === */}
+      <div
+        style={{
+          position: "fixed",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          background: "rgba(0,0,0,0.7)",
+          color: "#fff",
+          fontSize: "12px",
+          padding: "0.5rem",
+          zIndex: 9999,
+          maxHeight: "100px",
+          overflow: "auto",
+        }}
+      >
+        <div>🔍 URL: {`https://api.themoviedb.org/3/search/movie?api_key=${process.env.REACT_APP_TMDB_KEY}&query=${encodeURIComponent(query)}`}</div>
+        <div>⌛ Loading: {loading.toString()}</div>
+        <div>📊 Results: {results.length}</div>
       </div>
-    </motion.div>
+
+      <motion.div
+        className="add-page"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.4 }}
+      >
+        {/* Hero Banner с поиском */}
+        <section className="search-hero">
+          <div className="search-hero-bg" />
+          <div className="search-hero-content container">
+            <h2 className="search-hero-title">Find Your Next Movie</h2>
+            <div className="search-box">
+              <motion.i
+                className="fas fa-search search-icon"
+                whileHover={{ scale: 1.2 }}
+                transition={{ duration: 0.2 }}
+              />
+              <input
+                className="search-input"
+                type="text"
+                placeholder="Search for a movie"
+                value={query}
+                onChange={onChange}
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Результаты или Skeleton */}
+        <div className="container">
+          {loading ? (
+            <div className="movie-grid">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <SkeletonCard key={i} />
+              ))}
+            </div>
+          ) : results.length > 0 ? (
+            <ul className="results movie-grid">
+              {results.map((movie) => (
+                <li key={movie.id}>
+                  <ResultCard movie={movie} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            query && <h2 className="no-movies">No movies found!</h2>
+          )}
+        </div>
+      </motion.div>
+    </>
   );
 };
