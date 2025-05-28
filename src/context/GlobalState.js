@@ -2,22 +2,11 @@
 import React, { createContext, useReducer, useEffect } from "react";
 import AppReducer from "./AppReducer";
 
-// initial state
+// initial state, both lists persisted in localStorage
 const initialState = {
-  watchlist: [
-    {
-      id: 278,
-      title: "The Shawshank Redemption",
-      poster_path: "/q6y0Go1tsGEsmtFryDOJo3dEmqu.jpg",
-      release_date: "1994-09-23",
-    },
-    {
-      id: 238,
-      title: "The Godfather",
-      poster_path: "/3bhkrj58Vtu7enYsRolD1fZdja1.jpg",
-      release_date: "1972-03-14",
-    },
-  ],
+  watchlist: localStorage.getItem("watchlist")
+    ? JSON.parse(localStorage.getItem("watchlist"))
+    : [],
   watched: localStorage.getItem("watched")
     ? JSON.parse(localStorage.getItem("watched"))
     : [],
@@ -33,14 +22,14 @@ export const reorderWatchlist = (startIndex, endIndex) => ({
 });
 
 // provider component
-export const GlobalProvider = (props) => {
+export const GlobalProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AppReducer, initialState);
 
-  // persist to localStorage on state change
+  // persist lists to localStorage on changes
   useEffect(() => {
     localStorage.setItem("watchlist", JSON.stringify(state.watchlist));
     localStorage.setItem("watched", JSON.stringify(state.watched));
-  }, [state]);
+  }, [state.watchlist, state.watched]);
 
   // actions
   const addMovieToWatchlist = (movie) => {
@@ -66,19 +55,18 @@ export const GlobalProvider = (props) => {
   return (
     <GlobalContext.Provider
       value={{
-        dispatch,
         watchlist: state.watchlist,
         watched: state.watched,
-        dispatch, // ← добавлен dispatch для dnd
+        dispatch,
+        reorderWatchlist,
         addMovieToWatchlist,
         removeMovieFromWatchlist,
         addMovieToWatched,
         moveToWatchlist,
         removeFromWatched,
-        reorderWatchlist, // ← экпортируем action creator
       }}
     >
-      {props.children}
+      {children}
     </GlobalContext.Provider>
   );
 };

@@ -1,32 +1,28 @@
+// src/components/ResultCard.js
 import React, { useContext } from "react";
+import { motion } from "framer-motion";
 import Moment from "react-moment";
 import { GlobalContext } from "../context/GlobalState";
+// Импортируем toast
+import { toast } from "react-toastify";
 
 export const ResultCard = ({ movie }) => {
-  const {
-    addMovieToWatchlist,
-    addMovieToWatched,
-    watchlist,
-    watched,
-  } = useContext(GlobalContext);
+  const { addMovieToWatchlist, addMovieToWatched, watchlist, watched } =
+    useContext(GlobalContext);
 
-  let storedMovie = watchlist.find((o) => o.id === movie.id);
-  let storedMovieWatched = watched.find((o) => o.id === movie.id);
-
-  const watchlistDisabled = storedMovie
-    ? true
-    : storedMovieWatched
-    ? true
-    : false;
-
-  const watchedDisabled = storedMovieWatched ? true : false;
+  const inWatchlist = !!watchlist.find((m) => m.id === movie.id);
+  const inWatched = !!watched.find((m) => m.id === movie.id);
 
   return (
-    <div className="result-card">
+    <motion.div
+      className="result-card"
+      whileHover={{ scale: 1.02, y: -4 }}
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    >
       <div className="poster-wrapper">
         {movie.poster_path ? (
           <img
-            src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`}
+            src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
             alt={`${movie.title} Poster`}
           />
         ) : (
@@ -45,21 +41,26 @@ export const ResultCard = ({ movie }) => {
         <div className="controls">
           <button
             className="btn"
-            disabled={watchlistDisabled}
-            onClick={() => addMovieToWatchlist(movie)}
+            disabled={inWatchlist || inWatched}
+            onClick={() => {
+              addMovieToWatchlist(movie);
+              toast.success(`“${movie.title}” added to Watchlist!`);
+            }}
           >
-            Add to Watchlist
+            <i className="fa fa-bookmark" /> Watchlist
           </button>
-
           <button
             className="btn"
-            disabled={watchedDisabled}
-            onClick={() => addMovieToWatched(movie)}
+            disabled={inWatched}
+            onClick={() => {
+              addMovieToWatched(movie);
+              toast.success(`“${movie.title}” added to Watched!`);
+            }}
           >
-            Add to Watched
+            <i className="fa fa-eye" /> Watched
           </button>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };

@@ -225,8 +225,13 @@ a {
 
 /* === 6. Masonry-сетка вместо grid === */
 .movie-grid {
-  column-width: 260px;
-  column-gap: var(--space-md);
+  display: grid;
+  /* подбираем кол-во колонок автоматически по ширине экрана */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  /* единый gap и по вертикали, и по горизонтали */
+  gap: var(--space-md);
+  /* по желанию: выровнять карточки по центру ячеек */
+  justify-items: center;
 }
 @media (max-width: 900px) {
   .movie-grid {
@@ -535,4 +540,112 @@ html {
   position: relative;
   z-index: 2; /* поверх размытого фона и overlay */
   padding-top: var(--space-md);
+}
+/* === 12. Сетка результатов на Add === */
+.results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-md);
+  justify-items: center;
+}
+
+/* === 13. Сама карточка результата === */
+.result-card {
+  position: relative;
+  width: 100%;
+  max-width: 240px;
+  background: var(--color-bg);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.result-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Постер */
+.poster-wrapper {
+  width: 100%;
+  height: 360px;
+  background: #eee;
+}
+.poster-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.result-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 2) Растягиваем блок с инфо на всё оставшееся место */
+.result-card .info {
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* займёт пространство между постером и кнопками */
+}
+
+/* 3) Прижимаем кнопки к низу этого блока */
+.result-card .controls {
+  margin-top: auto;
+}
+
+/* Инфо-блок */
+.info {
+  padding: var(--space-sm);
+}
+.header {
+  margin-bottom: var(--space-xs);
+}
+.title {
+  font-size: 1.1rem;
+  margin: 0;
+  color: var(--color-primary);
+}
+.release-date {
+  font-size: 0.875rem;
+  color: var(--color-secondary);
+  margin: 0.25rem 0 0;
+}
+
+/* Кнопки */
+.controls {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+.btn {
+  flex: 1;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-secondary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5ch;
+  transition: background var(--transition);
+}
+.btn:disabled {
+  background: rgba(39, 35, 67, 0.3);
+  cursor: not-allowed;
+}
+.btn i {
+  font-size: 1rem;
+}
+.results {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-auto-rows: 1fr;
+  gap: var(--space-md);
 }
