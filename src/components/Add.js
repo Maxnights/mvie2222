@@ -19,7 +19,6 @@ export const Add = () => {
   const [loading, setLoading] = useState(false);
 
   const onChange = (e) => {
-    e.preventDefault();
     const value = e.target.value;
     setQuery(value);
     setLoading(true);
