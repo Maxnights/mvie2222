@@ -39,17 +39,20 @@ export const Add = () => {
     // === DEBUG PANEL ===
     console.log("Searching URL:", url);
 
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        setResults(Array.isArray(data.results) ? data.results : []);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Search error:", err);
-        setResults([]);
-        setLoading(false);
-      });
+ fetch(url)
+  .then((res) => res.json())
+  .then((data) => {
+    // Отладочный лог: покажет весь ответ API
+    console.log("API response:", data);
+
+    setResults(Array.isArray(data.results) ? data.results : []);
+    setLoading(false);
+  })
+  .catch((err) => {
+    console.error("Search error:", err);
+    setResults([]);
+    setLoading(false);
+  });
   }, [query]);
 
   return (
