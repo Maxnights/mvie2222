@@ -1,0 +1,538 @@
+/* === Анимированный градиент фона === */
+body {
+  background: linear-gradient(45deg, #1f1b24, #272343, #3a3a5a, #1f1b24);
+  background-size: 600% 600%;
+  animation: gradientShift 20s ease infinite;
+}
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* === 0. Переменные тем === */
+:root {
+  /* Цвета */
+  --color-primary: #1f1b24;
+  --color-secondary: #e94560;
+  --color-bg: #f6f6f6;
+  --color-text: #272343;
+  --color-nav-bg: #1f1b24;
+
+  /* Типографика */
+  --font-family: "Inter", sans-serif;
+  --font-size-base: 1rem;
+  --line-height: 1.5;
+
+  /* Отступы */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+
+  /* Скругления и переходы */
+  --radius: 0.75rem;
+  --transition: 0.3s ease;
+
+  /* Skeleton цвета (Light) */
+  --skeleton-base: #e0e0e0;
+  --skeleton-highlight: #f0f0f0;
+}
+
+:root[data-theme="dark"] {
+  --color-primary: #f6f6f6;
+  --color-secondary: #e94560;
+  --color-bg: #272343;
+  --color-text: #f6f6f6;
+  --color-nav-bg: #272343;
+
+  /* Skeleton цвета (Dark) */
+  --skeleton-base: #2c2c2c;
+  --skeleton-highlight: #3c3c3c;
+}
+
+/* === 1. Специально для search-input в темной теме === */
+:root[data-theme="dark"] .search-input {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+:root[data-theme="dark"] .search-input::placeholder {
+  color: rgba(246, 246, 246, 0.6);
+}
+:root[data-theme="dark"] .search-icon {
+  color: var(--color-text);
+}
+
+/* === 2. Сброс стилей === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* === 3. Утилиты === */
+.container {
+  max-width: 1200px;
+  padding: var(--space-sm);
+  margin: 0 auto;
+}
+.app-title {
+  font-size: 2rem;
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+
+/* === 4. Шапка (Navbar) === */
+.navbar {
+  background: var(--color-nav-bg);
+  padding: var(--space-sm) 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color var(--transition);
+}
+.navbar-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+.navbar-logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: white;
+  transition: color var(--transition);
+}
+.theme-toggle:hover {
+  color: var(--color-secondary);
+}
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: var(--space-md);
+}
+.nav-link {
+  color: white;
+  font-size: 1rem;
+  position: relative;
+  padding: var(--space-xs) 0;
+  transition: color var(--transition);
+}
+.nav-link:hover,
+.nav-link.active {
+  color: var(--color-secondary);
+}
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-secondary);
+}
+
+/* === 5. Карточка фильма (Glassmorphism) === */
+.movie-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--radius);
+  overflow: hidden;
+
+  /* более заметная тень по умолчанию */
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+
+  /* готовим к анимации тени */
+  will-change: box-shadow;
+  transition: box-shadow var(--transition), border-color var(--transition);
+}
+.movie-card:hover {
+  /* убираем движение, усиливаем тень и подсвечиваем рамку */
+  transform: none;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+.movie-poster {
+  width: 100%;
+  display: block;
+}
+.movie-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(31, 27, 36, 0.85), transparent);
+  padding: var(--space-sm);
+}
+.movie-title {
+  font-size: 1.25rem;
+  color: white;
+  margin-bottom: 0.25rem;
+}
+.movie-year {
+  font-size: 0.875rem;
+  color: #ddd;
+}
+.inner-card-controls {
+  position: absolute;
+  top: var(--space-sm);
+  right: var(--space-sm);
+  display: flex;
+  gap: var(--space-xs);
+}
+.ctrl-btn {
+  background-color: rgba(0, 0, 0, 0.6);
+  border: none;
+  border-radius: 50%;
+  padding: var(--space-xs);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+.ctrl-btn:hover {
+  background-color: var(--color-secondary);
+}
+.ctrl-btn i {
+  color: white;
+  font-size: 1rem;
+}
+
+/* === 6. Masonry-сетка вместо grid === */
+.movie-grid {
+  column-width: 260px;
+  column-gap: var(--space-md);
+}
+@media (max-width: 900px) {
+  .movie-grid {
+    column-count: 2;
+  }
+}
+@media (max-width: 600px) {
+  .movie-grid {
+    column-count: 1;
+  }
+}
+.movie-grid .movie-card {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: var(--space-md);
+}
+
+/* === 7. Страница Watchlist/Watched === */
+.movie-page .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.movie-page .heading {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+.movie-page .count-pill {
+  background: var(--color-secondary);
+  color: white;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+}
+
+/* === 8. Search на Add === */
+.search-box {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: var(--space-md) auto;
+}
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: var(--space-sm);
+  transform: translateY(-50%);
+  color: var(--color-text);
+  font-size: 1rem;
+  pointer-events: none;
+}
+.search-input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  padding-left: calc(var(--space-sm) * 2 + 1rem);
+  border: none;
+  border-radius: var(--radius);
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  color: var(--color-text);
+  transition: box-shadow var(--transition), transform var(--transition);
+}
+.search-input::placeholder {
+  color: rgba(39, 35, 67, 0.5);
+}
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-secondary);
+  transform: scale(1.02);
+}
+
+/* === 9. Hero Banner на Add === */
+.search-hero {
+  position: relative;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  margin-bottom: var(--space-md);
+}
+.search-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0; /* скрыли, фон — body */
+}
+.search-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  padding: var(--space-md) 0;
+}
+.search-hero-title {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-sm);
+  font-weight: bold;
+}
+
+/* === 10. Skeleton-заглушки (тема-aware) === */
+@keyframes pulse-skeleton {
+  0%,
+  100% {
+    background-color: var(--skeleton-base);
+  }
+  50% {
+    background-color: var(--skeleton-highlight);
+  }
+}
+.skeleton-card {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.skeleton-poster,
+.skeleton-text-line {
+  background-color: var(--skeleton-base);
+  animation: pulse-skeleton 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+.skeleton-poster {
+  height: 360px;
+}
+.skeleton-text-line {
+  height: 16px;
+}
+.skeleton-text-line.short {
+  width: 40%;
+}
+.skeleton-text-line.long {
+  width: 80%;
+}
+
+/* === 11. Плавный переход темы === */
+body,
+.navbar,
+.search-input,
+.movie-card {
+  transition: background-color var(--transition), color var(--transition),
+    box-shadow var(--transition), border-color var(--transition);
+}
+html {
+  transition: background-color var(--transition), color var(--transition);
+}
+/* Hero-баннер на Home */
+.home-hero {
+  height: 200px;
+  background: var(--color-nav-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.home-hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-xs);
+}
+.home-hero p {
+  font-size: 1.2rem;
+}
+
+/* Секции каруселей */
+.carousel-section {
+  text-align: center;
+  margin: var(--space-md) 0;
+}
+.carousel-section h3 {
+  display: inline-block;
+  margin-bottom: var(--space-sm);
+  color: var(--color-primary);
+}
+
+/* Подправим контейнер MovieCard3D внутри Swiper */
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+}
+.home-hero {
+  height: 200px;
+  background: var(--color-nav-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  margin-bottom: var(--space-md);
+}
+.carousel-section {
+  padding: var(--space-md) 0;
+}
+.carousel-section h3 {
+  margin-left: var(--space-sm);
+  margin-bottom: var(--space-sm);
+  color: var(--color-primary);
+}
+/* === Fix: Hero-заголовок для светлой темы === */
+:root:not([data-theme="dark"]) .search-hero-content,
+:root:not([data-theme="dark"]) .search-hero-content .search-hero-title,
+:root:not([data-theme="dark"]) .search-hero-content p {
+  color: var(--color-text); /* вместо всегда white */
+}
+/* 1) Убираем margin у 3D-карточек, перенесём spacing в слайдер */
+.card-3d {
+  margin: 0; /* вместо margin: var(--space-sm) */
+}
+
+/* 2) Выравниваем каждый слайд по верху и центрируем по горизонтали */
+.slick-slide {
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: center !important;
+  padding: 0 var(--space-xs); /* расстояние между слайдами */
+}
+
+/* 3) Если нужно добавить отступ снизу */
+.carousel-section {
+  padding-bottom: var(--space-md);
+}
+/* 1) Убираем внешний margin у 3D-карточек — пусть spacing даёт сам слайдер */
+.card-3d {
+  margin: 0 !important;
+}
+
+/* 2) Заставляем слайды выравниваться по верху и центрировать по горизонтали */
+.slick-slide {
+  display: flex !important;
+  align-items: flex-start !important; /* выровнять по верху */
+  justify-content: center !important; /* центр по горизонтали */
+  padding: 0 var(--space-xs); /* горизонтальный gap между слайдами */
+}
+
+/* 3) При необходимости добавим отступ снизу карусели */
+.carousel-section {
+  padding-bottom: var(--space-md);
+}
+/* === Улучшаем видимость оборотной стороны в Dark Theme === */
+:root[data-theme="dark"] .card-back {
+  /* более светлый полупрозрачный фон */
+  background: rgba(255, 255, 255, 0.15) !important;
+}
+
+:root[data-theme="dark"] .card-back-title,
+:root[data-theme="dark"] .card-back-year {
+  /* делаем текст тёмным, чтобы он читался на светлом фоне */
+  color: white !important;
+}
+
+/* кнопки управления: иконки тоже тёмные */
+:root[data-theme="dark"] .card-back-controls .ctrl-btn i {
+  color: white !important;
+}
+/* === Улучшаем видимость search-input в тёмной теме === */
+:root[data-theme="dark"] .search-input {
+  background: rgba(255, 255, 255, 0.05); /* чуть светлее фона */
+  border: 1px solid rgba(255, 255, 255, 0.3); /* заметная рамка */
+  color: var(--color-text); /* текст светлый */
+}
+
+:root[data-theme="dark"] .search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+/* === Динамический фон для Home === */
+.home-wrapper {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  /* чуть увеличим для «панорамного» эффекта */
+  transform: scale(1.1);
+  overflow: hidden; /* скрыть возможные артефакты */
+}
+
+.home-wrapper::before {
+  /* размытие фона через псевдо-элемент */
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background-image: inherit;
+  background-size: cover;
+  background-position: center;
+  filter: blur(30px);
+  transform: scale(1.05);
+  z-index: 0;
+}
+
+.home-wrapper .overlay {
+  /* тёмная полупрозрачная подложка, чтобы текст читался */
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(31, 27, 36, 0.6);
+  z-index: 1;
+}
+
+.home-wrapper .home-page {
+  position: relative;
+  z-index: 2; /* поверх размытого фона и overlay */
+  padding-top: var(--space-md);
+}
