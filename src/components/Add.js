@@ -1,15 +1,12 @@
-// src/components/Add.js
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { ResultCard } from "./ResultCard";
-// — добавлен импорт motion для анимации появления страницы
 import { motion } from "framer-motion";
 
-// Skeleton-заглушка для показа при загрузке
 const SkeletonCard = () => (
   <div className="skeleton-card">
-    <div className="skeleton-poster"></div>
-    <div className="skeleton-text-line short"></div>
-    <div className="skeleton-text-line long"></div>
+    <div className="skeleton-poster" />
+    <div className="skeleton-text-line short" />
+    <div className="skeleton-text-line long" />
   </div>
 );
 
@@ -18,16 +15,24 @@ export const Add = () => {
   const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
 
+  // 1) Обработчик только обновляет query
   const onChange = (e) => {
-    const value = e.target.value;
-    setQuery(value);
-    setLoading(true);
+    setQuery(e.target.value);
+  };
 
+  // 2) Хук запускает fetch при каждом изменении query
+  useEffect(() => {
+    if (!query) {
+      setResults([]);
+      return;
+    }
+
+    setLoading(true);
     fetch(
       `https://api.themoviedb.org/3/search/movie?api_key=${
         process.env.REACT_APP_TMDB_KEY
       }&language=en-US&page=1&include_adult=false&query=${encodeURIComponent(
-        value
+        query
       )}`
     )
       .then((res) => res.json())
@@ -39,10 +44,9 @@ export const Add = () => {
         setResults([]);
         setLoading(false);
       });
-  };
+  }, [query]);
 
   return (
-    // — обернули всю страницу в motion.div с initial/animate/exit для плавного появления
     <motion.div
       className="add-page"
       initial={{ opacity: 0, y: 20 }}
@@ -58,7 +62,6 @@ export const Add = () => {
           <div className="search-box">
             <motion.i
               className="fas fa-search search-icon"
-              // — легкий эффект при наведении на иконку
               whileHover={{ scale: 1.2 }}
               transition={{ duration: 0.2 }}
             />
@@ -81,7 +84,7 @@ export const Add = () => {
               <SkeletonCard key={i} />
             ))}
           </div>
-        ) : Array.isArray(results) && results.length > 0 ? (
+        ) : results.length > 0 ? (
           <ul className="results movie-grid">
             {results.map((movie) => (
               <li key={movie.id}>
