@@ -649,3 +649,46 @@ html {
   grid-auto-rows: 1fr;
   gap: var(--space-md);
 }
+
+/* ==== Mobile tweaks ==== */
+@media (max-width: 640px) {
+  /* 1) Центрируем контролы под карточкой */
+  .result-card .controls,
+  .inner-card-controls {
+    justify-content: center;    /* выровнять по центру */
+    gap: var(--space-sm) !important;  /* чуть больше отступ между кнопками */
+  }
+
+  /* на всякий случай: если кнопки растягиваются в строку */
+  .result-card .controls .btn {
+    flex: 1 1 auto;             /* позволяем им сжиматься/расти */
+    max-width: 120px;           /* не слишком широкие */
+  }
+
+  /* 2) Переместим переключатель темы в более удобное место: */
+  .navbar-container {
+    display: flex;
+    flex-wrap: wrap;            /* позволяем элементам переноситься */
+    align-items: center;
+    gap: var(--space-sm);
+  }
+
+  /* Логотип всегда в начале */
+  .navbar-logo {
+    order: 1;
+  }
+
+  /* Ссылки — сразу за логотипом */
+  .nav-links {
+    order: 2;
+    flex: 1;                    /* заполняют всё доступное пространство */
+    justify-content: center;    /* выравниваем меню по центру */
+    display: flex;
+  }
+
+  /* Переключатель темы — в самый конец строки */
+  .theme-toggle {
+    order: 3;
+    margin-left: auto;          /* максимально вправо */
+  }
+}
