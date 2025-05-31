@@ -14,23 +14,21 @@ body {
   100% {
     background-position: 0% 50%;
   }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 
 /* === 1. Базовые переменные === */
 :root {
   --color-text: #e9e9e9;
-  --color-nav-bg: rgba(20, 18, 23, 0.8);
-  --color-bg: rgba(31, 27, 36, 0.8);
+  --color-nav-bg: rgba(20, 18, 23, 0.85);
+  --color-nav-hover: rgba(233, 69, 96, 0.2);
+  --color-bg: rgba(31, 27, 36, 0.9);
   --color-card-bg: rgba(255, 255, 255, 0.1);
   --color-primary: #e94560;
   --color-primary-hover: #d13450;
   --font-family: "Inter", sans-serif;
   --font-size-base: 16px;
   --radius: 8px;
-  --transition: 0.3s ease;
+  --transition: 0.25s ease;
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
@@ -64,6 +62,8 @@ ul {
 }
 button {
   cursor: pointer;
+  background: transparent;
+  border: none;
 }
 
 /* === 3. Шапка (navbar) === */
@@ -84,6 +84,7 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  position: relative;
 }
 .navbar-logo {
   font-size: 1.5rem;
@@ -97,12 +98,12 @@ button {
 .nav-links li a {
   font-size: 1rem;
   padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius);
   transition: background var(--transition);
 }
 .nav-links li a:hover,
 .nav-links li a.active {
-  background: rgba(233, 69, 96, 0.2);
-  border-radius: var(--radius);
+  background: var(--color-nav-hover);
 }
 .hamburger {
   display: none;
@@ -110,9 +111,6 @@ button {
   justify-content: space-between;
   width: 24px;
   height: 18px;
-  background: transparent;
-  border: none;
-  padding: 0;
   position: relative;
   z-index: 1100;
 }
@@ -151,18 +149,23 @@ button {
 .nav-links-mobile {
   display: none; /* появится при клике на гамбургер */
   position: absolute;
-  top: 56px; /* регулируем под высоту шапки */
-  right: var(--space-sm);
+  top: 100%; /* меню будет выезжать сразу под шапкой */
+  left: var(--space-sm); /* меню «прижато» к левому краю шапки */
   background: var(--color-nav-bg);
   border-radius: var(--radius);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
   list-style: none;
   padding: var(--space-md) 0;
-  width: 160px;
+  width: 180px; /* чуть шире, чем 160px, чтобы текст не упирался */
   z-index: 1000;
+  transition: opacity var(--transition), transform var(--transition);
+  opacity: 0;
+  transform: translateY(-10px);
 }
 .nav-links-mobile.open {
   display: block;
+  opacity: 1;
+  transform: translateY(0);
 }
 .nav-links-mobile li {
   margin: var(--space-xs) 0;
@@ -173,11 +176,11 @@ button {
   font-size: 1rem;
   padding: var(--space-xs) var(--space-md);
   display: block;
+  transition: background var(--transition);
 }
 .nav-links-mobile li a:hover,
 .nav-links-mobile li a.active {
-  background: rgba(233, 69, 96, 0.2);
-  border-radius: var(--radius);
+  background: var(--color-nav-hover);
 }
 
 /* === 5. Карточка фильма (Glassmorphism) === */
@@ -411,26 +414,33 @@ html {
     margin-left: auto;
   }
 
-  /* Мобильное меню */
+  /* 15.2 Меню гамбургера */
   .nav-links-mobile {
+    /* остались базовые стили: width и позиционирование */
+    /* ширина 180px для эстетики */
+    width: 180px;
+    /* прижимаем слева к шапке (как у бургер-кнопки) */
     left: var(--space-sm);
-    width: 160px;
+    /* top: 100% - чтобы меню выпадало точно под шапку */
+    top: 100%;
+    /* Отключаем все расчёты на 100% ширины, чтобы не растягивалось */
+    right: auto;
   }
 
-  /* 15.2 Увеличиваем иконку поиска, смещаем влево */
+  /* 15.3 Увеличиваем иконку поиска, смещаем влево */
   .search-icon {
     left: var(--space-sm);
     font-size: 1.3rem;
   }
 
-  /* 15.3 Корректируем отступы у search-box */
+  /* 15.4 Корректируем отступы у search-box */
   .search-box {
     width: 100%;
     padding: 0 var(--space-sm);
     box-sizing: border-box;
   }
 
-  /* 15.4 Сетка карточек: 2 колонки вместо 3 */
+  /* 15.5 Сетка карточек: 2 колонки вместо 3 */
   .grid-3 {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -452,8 +462,9 @@ html {
   border: none !important;
 }
 
+/* === 18. Дополнительные мелкие правки для мобильной версии === */
 @media (max-width: 640px) {
-  /* Сдвигаем лупу правее только на мобильных */
+  /* Слегка смещаем лупу правее */
   .search-icon {
     left: calc(var(--space-sm) + 1rem);
   }
