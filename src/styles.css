@@ -245,6 +245,23 @@ a {
   background: rgba(233, 69, 96, 0.2);
 }
 
+/* Скругляем верхние углы у первого пункта */
+.nav-links-mobile li:first-child a:hover {
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+
+/* Скругляем нижние углы у последнего пункта */
+.nav-links-mobile li:last-child a:hover {
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+
+/* Убираем скругление у «средних» пунктов (если потребуется): */
+.nav-links-mobile li:not(:first-child):not(:last-child) a:hover {
+  border-radius: 0;
+}
+
 /* === 5. Карточка фильма (Glassmorphism) === */
 .movie-card {
   position: relative;
