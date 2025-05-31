@@ -668,8 +668,8 @@ html {
 
   /* Мобильное меню */
   .nav-links-mobile {
-    right: var(--space-sm);
-    width: calc(100% - 2 * var(--space-sm));
+    left: 0;
+    width: 140px;
   }
 
   /* 15.2 Увеличиваем иконку поиска, смещаем влево */
