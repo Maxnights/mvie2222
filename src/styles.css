@@ -180,7 +180,7 @@ a {
   transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-/* При добавлении класса .open к .hamburger, превращаем-полоски в крестик */
+/* При добавлении класса .open к .hamburger, превращаем полоски в крестик */
 .hamburger.open span:nth-child(1) {
   transform: translateY(6px) rotate(45deg);
 }
@@ -282,25 +282,15 @@ a {
   font-size: 1rem;
 }
 
-/* === 6. Masonry-сетка вместо grid === */
+/* === 6. Сетка карточек через CSS Grid вместо masonry === */
 .movie-grid {
-  column-width: 260px;
-  column-gap: var(--space-md);
-}
-@media (max-width: 900px) {
-  .movie-grid {
-    column-count: 2;
-  }
-}
-@media (max-width: 600px) {
-  .movie-grid {
-    column-count: 1;
-  }
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: var(--space-md);
 }
 .movie-grid .movie-card {
-  display: inline-block;
   width: 100%;
-  margin-bottom: var(--space-md);
+  margin-bottom: 0;
 }
 
 /* === 7. Страница Watchlist/Watched === */
@@ -688,9 +678,9 @@ html {
     padding-left: calc(var(--space-sm) * 2 + 1rem);
   }
 
-  /* 15.4 Masonry-сетка в один столбец */
+  /* 15.4 В мобильной версии делаем одну колонку Grid */
   .movie-grid {
-    column-count: 1;
+    grid-template-columns: 1fr;
   }
 }
 
