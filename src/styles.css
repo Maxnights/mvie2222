@@ -191,12 +191,13 @@ a {
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* === 4.2. Мобильное меню (скрыто через visibility + opacity) === */
+/* === 4.2. Мобильное меню (скрыто через visibility + opacity, полупрозрачный фон) === */
 .nav-links-mobile {
   position: absolute;
   top: 52px; /* регулируем под высоту шапки */
   right: var(--space-sm);
-  background: var(--color-nav-bg);
+  /* Фон светлой темы: rgba(31,27,36,0.85) */
+  background: rgba(31, 27, 36, 0.85);
   border-radius: var(--radius);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   list-style: none;
@@ -211,6 +212,12 @@ a {
   transition: transform 0.25s ease-out, opacity 0.25s ease-out, visibility 0.25s ease-out;
 }
 
+/* Для тёмной темы: полупрозрачный фон rgba(39,35,67,0.85) */
+:root[data-theme="dark"] .nav-links-mobile {
+  background: rgba(39, 35, 67, 0.85);
+}
+
+/* Когда добавляется класс .open, меню появляется плавно */
 .nav-links-mobile.open {
   visibility: visible;
   opacity: 1;
