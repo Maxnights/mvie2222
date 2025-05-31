@@ -209,13 +209,13 @@ a {
   display: block;
 }
 .nav-links-mobile li {
-  margin: var(--space-xs) 0;
+  margin: 2px 0;
   text-align: center;
 }
 .nav-links-mobile li a {
   color: white;
   font-size: 1rem;
-  padding: var(--space-xs) var(--space-md);
+  padding: 4px var(--space-sm);
   display: block;
 }
 .nav-links-mobile li a:hover,
