@@ -202,7 +202,7 @@ a {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   list-style: none;
   padding: var(--space-md) 0;
-  width: 160px;
+  min-width: 120px;
   z-index: 1000;
 }
 .nav-links-mobile.open {
