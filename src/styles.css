@@ -692,3 +692,164 @@ html {
     margin-left: auto;          /* максимально вправо */
   }
 }
+
+/* ==========================
+   12. Навигация и Гамбургер
+   ========================== */
+
+/* 1) Сбрасываем стили нативного списка */
+.nav-links,
+.nav-links-mobile {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* 2) Обычное меню (Desktop) */
+.nav-links {
+  display: flex;
+  gap: var(--space-md);
+}
+.nav-links li {
+  /* ничего лишнего */
+}
+.nav-link {
+  color: white;
+  font-size: 1rem;
+  position: relative;
+  padding: var(--space-xs) 0;
+  transition: color var(--transition);
+}
+.nav-link:hover,
+.nav-link.active {
+  color: var(--color-secondary);
+}
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-secondary);
+}
+
+/* 3) Скрываем мобильное меню по умолчанию */
+.nav-links-mobile {
+  display: none;
+}
+
+/* 4) Кнопка «гамбургер» */
+.hamburger {
+  display: none; /* по умолчанию скрываем, покажем только на mobile */
+  flex-direction: column;
+  justify-content: space-between;
+  width: 24px;
+  height: 18px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  margin-left: var(--space-sm);
+  z-index: 100; /* чтобы гамбургер был поверх */
+}
+.hamburger span {
+  display: block;
+  height: 2px;
+  background-color: white;
+  border-radius: 2px;
+  transition: transform var(--transition), opacity var(--transition);
+}
+/* промежуток между полосками */
+.hamburger span:nth-child(1) { width: 100%; }
+.hamburger span:nth-child(2) { width: 100%; }
+.hamburger span:nth-child(3) { width: 100%; }
+
+/* 5) Когда меню открыто, превращаем гамбургер в крестик */
+.hamburger.open span:nth-child(1) {
+  transform: translateY(8px) rotate(45deg);
+}
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-8px) rotate(-45deg);
+}
+
+/* 6) Стили для мобильного меню (выпадашка) */
+.nav-links-mobile.open {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%; /* сразу под шапкой */
+  left: 0;
+  width: 100%;
+  background: var(--color-nav-bg);
+  padding: var(--space-md) 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  animation: slideDown 0.3s ease;
+  z-index: 99;
+}
+.nav-links-mobile.open li {
+  margin: var(--space-sm) 0;
+  text-align: center;
+}
+.nav-link-mobile {
+  color: white;
+  font-size: 1.1rem;
+  text-decoration: none;
+  transition: color var(--transition);
+  padding: var(--space-xs) 0;
+}
+.nav-link-mobile:hover,
+.nav-link-mobile.active {
+  color: var(--color-secondary);
+}
+
+/* Анимация: плавное появление выпадающего списка */
+@keyframes slideDown {
+  from {
+    transform: translateY(-10px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* 7) Показываем гамбургер и скрываем desktop-ссылки на narrow экранах */
+@media (max-width: 640px) {
+  /* Скрываем обычное desktop-меню */
+  .nav-links {
+    display: none;
+  }
+
+  /* Показываем гамбургер */
+  .hamburger {
+    display: flex;
+  }
+
+  /* Кнопка темы и логотип остаются на месте */
+  /* Сама кнопка theme-toggle уже в Header.js рядом с гамбургером */
+}
+
+/* ==================================
+   13. Корректируем поле поиска на Mobile
+   ================================== */
+
+/* На десктопе у вас, вероятно, .search-box занимает всю ширину контейнера. 
+   На мобильных добавим отступы «контейнера», чтобы строка поиска не упиралась. */
+@media (max-width: 640px) {
+  .search-box {
+    width: 100%;
+    padding: 0 var(--space-sm);   /* слева/справа по 1rem */
+    box-sizing: border-box;       /* чтобы padding не «рвал» ширину */
+  }
+
+  /* Если вы хотите, чтобы иконка поиска была чуть левее, 
+     можно уменьшить padding-left для input внутри .search-box */
+  .search-input {
+    padding-left: calc(var(--space-sm) * 2 + 1rem); /* примерно так же, как было */
+  }
+}
