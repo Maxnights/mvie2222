@@ -56,7 +56,7 @@ body {
   --skeleton-highlight: #3c3c3c;
 }
 
-/* === 1. Специально для search-input в темной теме === */
+/* === 1. Специально для search-input и иконки в темной теме === */
 :root[data-theme="dark"] .search-input {
   background: var(--color-bg);
   color: var(--color-text);
@@ -105,13 +105,12 @@ a {
   padding: var(--space-sm) 0;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: background-color var(--transition);
-  position: relative; /* !! Чтобы выпадающее меню могло позиционироваться относительно самой шапки */
-  z-index: 100;       /* !! Чтобы гамбургер и меню были поверх контента страницы */
 }
 .navbar-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: var(--space-sm);
 }
 .navbar-left {
   display: flex;
@@ -134,24 +133,10 @@ a {
 .theme-toggle:hover {
   color: var(--color-secondary);
 }
-
-/* === 12. Навигация и Гамбургер === */
-
-/* 1) Сбрасываем стили нативного списка */
-.nav-links,
-.nav-links-mobile {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-/* 2) Обычное меню (Desktop) */
 .nav-links {
+  list-style: none;
   display: flex;
   gap: var(--space-md);
-}
-.nav-links li {
-  /* ничего лишнего */
 }
 .nav-link {
   color: white;
@@ -174,107 +159,64 @@ a {
   background: var(--color-secondary);
 }
 
-/* 3) Скрываем мобильное меню по умолчанию */
-.nav-links-mobile {
-  display: none;
-}
-
-/* 4) Кнопка «гамбургер» */
+/* === 4.1. Иконка-гамбургер === */
 .hamburger {
-  display: none; /* по умолчанию скрываем, покажем только на mobile */
+  display: none; /* показываем только в мобильном режиме */
   flex-direction: column;
-  justify-content: space-between;
-  width: 24px;
-  height: 18px;
-  background: none;
-  border: none;
+  gap: 4px;
   cursor: pointer;
-  padding: 0;
-  margin-left: var(--space-sm);
-  z-index: 101; /* поверх всей шапки и выпадающего меню */
 }
 .hamburger span {
   display: block;
-  height: 2px;
-  background-color: white;
+  width: 24px;
+  height: 3px;
+  background: white;
   border-radius: 2px;
-  transition: transform var(--transition), opacity var(--transition);
+  transition: transform 0.3s ease;
 }
-/* промежуток между полосками */
-.hamburger span:nth-child(1) { width: 100%; }
-.hamburger span:nth-child(2) { width: 100%; }
-.hamburger span:nth-child(3) { width: 100%; }
 
-/* 5) Когда меню открыто, превращаем гамбургер в крестик */
+/* При добавлении класса .open к .hamburger, вращаем полоски в крестик */
 .hamburger.open span:nth-child(1) {
-  transform: translateY(8px) rotate(45deg);
+  transform: translateY(6px) rotate(45deg);
 }
 .hamburger.open span:nth-child(2) {
   opacity: 0;
 }
 .hamburger.open span:nth-child(3) {
-  transform: translateY(-8px) rotate(-45deg);
+  transform: translateY(-6px) rotate(-45deg);
 }
 
-/* 6) Стили для мобильного меню (выпадашка) */
-.nav-links-mobile.open {
-  display: flex;
-  flex-direction: column;
-  position: absolute;   /* !! Абсолютное позиционирование относительно .navbar */
-  top: 100%;            /* !! Располагаем сразу под шапкой */
-  left: 0;
-  width: 100%;
+/* === 4.2. Мобильное меню (спрятано по умолчанию) === */
+.nav-links-mobile {
+  display: none; /* появится при клике на гамбургер */
+  position: absolute;
+  top: 60px; /* чуть ниже шапки */
+  right: var(--space-sm);
   background: var(--color-nav-bg);
-  padding: var(--space-md) 0;
+  border-radius: var(--radius);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-  animation: slideDown 0.3s ease;
-  z-index: 99;          /* чуть ниже, чем гамбургер (101) */
+  list-style: none;
+  padding: var(--space-md) 0;
+  width: 160px;
+  z-index: 1000;
 }
-.nav-links-mobile.open li {
-  margin: var(--space-sm) 0;
+.nav-links-mobile.open {
+  display: block;
+}
+.nav-links-mobile li {
+  margin: var(--space-xs) 0;
   text-align: center;
 }
-.nav-link-mobile {
+.nav-links-mobile li a {
   color: white;
-  font-size: 1.1rem;
-  text-decoration: none;
-  transition: color var(--transition);
-  padding: var(--space-xs) 0;
+  font-size: 1rem;
+  padding: var(--space-xs) var(--space-md);
+  display: block;
 }
-.nav-link-mobile:hover,
-.nav-link-mobile.active {
-  color: var(--color-secondary);
+.nav-links-mobile li a:hover,
+.nav-links-mobile li a.active {
+  background: rgba(233, 69, 96, 0.2);
 }
-
-/* Анимация: плавное появление выпадающего списка */
-@keyframes slideDown {
-  from {
-    transform: translateY(-10px);
-    opacity: 0;
-  }
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-/* 7) Показываем гамбургер и скрываем desktop-ссылки на narrow экранах */
-@media (max-width: 640px) {
-  /* Скрываем обычное desktop-меню */
-  .nav-links {
-    display: none;
-  }
-
-  /* Показываем гамбургер */
-  .hamburger {
-    display: flex;
-  }
-
-  /* Кнопка темы и логотип остаются на месте */
-  /* Сама кнопка theme-toggle уже в Header.js рядом с гамбургером */
-}
-
-/* ================================== */
 
 /* === 5. Карточка фильма (Glassmorphism) === */
 .movie-card {
@@ -284,16 +226,10 @@ a {
   border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: var(--radius);
   overflow: hidden;
-
-  /* более заметная тень по умолчанию */
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-
-  /* готовим к анимации тени */
-  will-change: box-shadow;
   transition: box-shadow var(--transition), border-color var(--transition);
 }
 .movie-card:hover {
-  /* убираем движение, усиливаем тень и подсвечиваем рамку */
   transform: none;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
   border-color: rgba(255, 255, 255, 0.4);
@@ -343,13 +279,8 @@ a {
 
 /* === 6. Masonry-сетка вместо grid === */
 .movie-grid {
-  display: grid;
-  /* подбираем кол-во колонок автоматически по ширине экрана */
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  /* единый gap и по вертикали, и по горизонтали */
-  gap: var(--space-md);
-  /* выровнять карточки по центру ячеек */
-  justify-items: center;
+  column-width: 260px;
+  column-gap: var(--space-md);
 }
 @media (max-width: 900px) {
   .movie-grid {
@@ -396,11 +327,12 @@ a {
 .search-icon {
   position: absolute;
   top: 50%;
-  left: var(--space-sm);
+  left: calc(var(--space-sm) + 4px);
   transform: translateY(-50%);
   color: var(--color-text);
-  font-size: 1rem;
+  font-size: 1.2rem;
   pointer-events: none;
+  transition: color var(--transition);
 }
 .search-input {
   width: 100%;
@@ -416,6 +348,7 @@ a {
 }
 .search-input::placeholder {
   color: rgba(39, 35, 67, 0.5);
+  font-style: italic;
 }
 .search-input:focus {
   outline: none;
@@ -455,8 +388,7 @@ a {
 
 /* === 10. Skeleton-заглушки (тема-aware) === */
 @keyframes pulse-skeleton {
-  0%,
-  100% {
+  0%, 100% {
     background-color: var(--skeleton-base);
   }
   50% {
@@ -500,7 +432,7 @@ html {
   transition: background-color var(--transition), color var(--transition);
 }
 
-/* Hero-баннер на Home */
+/* === Hero-баннер на Home === */
 .home-hero {
   height: 200px;
   background: var(--color-nav-bg);
@@ -518,10 +450,10 @@ html {
   font-size: 1.2rem;
 }
 
-/* Секции каруселей */
+/* === Секции каруселей === */
 .carousel-section {
+  padding: var(--space-md) 0;
   text-align: center;
-  margin: var(--space-md) 0;
 }
 .carousel-section h3 {
   display: inline-block;
@@ -529,38 +461,66 @@ html {
   color: var(--color-primary);
 }
 
-/* Подправим контейнер MovieCard3D внутри Swiper */
-.swiper-slide {
-  display: flex;
-  justify-content: center;
+/* === Улучшаем видимость оборотной стороны 3D карточки в Dark Theme === */
+:root[data-theme="dark"] .card-back {
+  background: rgba(255, 255, 255, 0.15) !important;
 }
-.home-hero {
-  height: 200px;
-  background: var(--color-nav-bg);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  margin-bottom: var(--space-md);
+:root[data-theme="dark"] .card-back-title,
+:root[data-theme="dark"] .card-back-year {
+  color: white !important;
 }
-.carousel-section {
-  padding: var(--space-md) 0;
-}
-.carousel-section h3 {
-  margin-left: var(--space-sm);
-  margin-bottom: var(--space-sm);
-  color: var(--color-primary);
+:root[data-theme="dark"] .card-back-controls .ctrl-btn i {
+  color: white !important;
 }
 
-/* === Fix: Hero-заголовок для светлой темы === */
-:root:not([data-theme="dark"]) .search-hero-content,
-:root:not([data-theme="dark"]) .search-hero-content .search-hero-title,
-:root:not([data-theme="dark"]) .search-hero-content p {
-  color: var(--color-text); /* вместо всегда white */
+/* === Улучшаем видимость search-input в тёмной теме ещё раз === */
+:root[data-theme="dark"] .search-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-text);
+}
+:root[data-theme="dark"] .search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
 }
 
-/* 12. Сетка результатов на Add */
+/* === Динамический фон для Home (необязательно) === */
+.home-wrapper {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.1);
+  overflow: hidden;
+}
+.home-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background-image: inherit;
+  background-size: cover;
+  background-position: center;
+  filter: blur(30px);
+  transform: scale(1.05);
+  z-index: 0;
+}
+.home-wrapper .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(31, 27, 36, 0.6);
+  z-index: 1;
+}
+.home-wrapper .home-page {
+  position: relative;
+  z-index: 2;
+  padding-top: var(--space-md);
+}
+
+/* === 12. Сетка результатов на Add === */
 .results {
   list-style: none;
   margin: 0;
@@ -571,7 +531,7 @@ html {
   justify-items: center;
 }
 
-/* === 13. Сама карточка результата === */
+/* === 13. Карточка результата === */
 .result-card {
   position: relative;
   width: 100%;
@@ -581,6 +541,9 @@ html {
   overflow: hidden;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: box-shadow var(--transition), transform var(--transition);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .result-card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
@@ -598,26 +561,12 @@ html {
   object-fit: cover;
 }
 
-/* Для того, чтобы кнопки внизу карточки на мобильных ровно прижимались вниз */
-.result-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-/* 2) Растягиваем блок с инфо на всё оставшееся место */
-.result-card .info {
-  display: flex;
-  flex-direction: column;
-  flex: 1; /* займёт пространство между постером и кнопками */
-}
-/* 3) Прижимаем кнопки к низу этого блока */
-.result-card .controls {
-  margin-top: auto;
-}
-
 /* Инфо-блок */
 .info {
   padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* занимает всё пространство между постером и контролами */
 }
 .header {
   margin-bottom: var(--space-xs);
@@ -633,7 +582,7 @@ html {
   margin: 0.25rem 0 0;
 }
 
-/* Кнопки */
+/* Кнопки управления результатами */
 .controls {
   display: flex;
   gap: var(--space-xs);
@@ -661,69 +610,76 @@ html {
 .btn i {
   font-size: 1rem;
 }
-.results {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  grid-auto-rows: 1fr;
-  gap: var(--space-md);
+
+/* === 14. Плавный переход темы (еще раз) === */
+body,
+.navbar,
+.search-input,
+.movie-card {
+  transition: background-color var(--transition), color var(--transition),
+    box-shadow var(--transition), border-color var(--transition);
+}
+html {
+  transition: background-color var(--transition), color var(--transition);
 }
 
-/* ==== Mobile tweaks ==== */
+/* === 15. Мобильная адаптация === */
 @media (max-width: 640px) {
-  /* 1) Центрируем контролы под карточкой */
-  .result-card .controls,
-  .inner-card-controls {
-    justify-content: center;    /* выровнять по центру */
-    gap: var(--space-sm) !important;  /* чуть больше отступ между кнопками */
+  /* 15.1 Скрываем горизонтальные вкладки и показываем гамбургер */
+  .nav-links {
+    display: none !important;
+  }
+  .nav-links li {
+    display: none !important;
+  }
+  .hamburger {
+    display: flex !important;
   }
 
-  /* на всякий случай: если кнопки растягиваются в строку */
-  .result-card .controls .btn {
-    flex: 1 1 auto;             /* позволяем им сжиматься/расти */
-    max-width: 120px;           /* не слишком широкие */
-  }
-
-  /* 2) Переместим переключатель темы в более удобное место: */
+  /* Переупорядочиваем элементы шапки */
   .navbar-container {
     display: flex;
-    flex-wrap: wrap;            /* позволяем элементам переноситься */
+    flex-wrap: wrap;
     align-items: center;
     gap: var(--space-sm);
   }
-
-  /* Логотип всегда в начале */
   .navbar-logo {
     order: 1;
   }
-
-  /* Ссылки — сразу за логотипом (прижата к центру) */
   .nav-links {
     order: 2;
-    flex: 1;                    /* заполняют всё доступное пространство */
-    justify-content: center;    /* выравниваем меню по центру */
-    display: flex;
+    flex: 1;
+    justify-content: center;
   }
-
-  /* Переключатель темы — в самый конец строки */
   .theme-toggle {
     order: 3;
-    margin-left: auto;          /* максимально вправо */
+    margin-left: auto;
   }
-}
 
-/* === 13. Корректируем поле поиска на Mobile === */
-/* На десктопе у вас, вероятно, .search-box занимает всю ширину контейнера. 
-   На мобильных добавим отступы «контейнера», чтобы строка поиска не упиралась. */
-@media (max-width: 640px) {
+  /* 15.2 Стрелка/иконка поиска немного увеличена и сдвинута */
+  .search-icon {
+    left: calc(var(--space-sm) + 2px);
+    font-size: 1.3rem;
+  }
+
+  /* 15.3 Корректируем отступы у search-box */
   .search-box {
     width: 100%;
-    padding: 0 var(--space-sm);   /* слева/справа по 1rem */
-    box-sizing: border-box;       /* чтобы padding не «рвал» ширину */
+    padding: 0 var(--space-sm);
+    box-sizing: border-box;
   }
-
-  /* Если вы хотите, чтобы иконка поиска была чуть левее, 
-     можно уменьшить padding-left для input внутри .search-box */
   .search-input {
     padding-left: calc(var(--space-sm) * 2 + 1rem);
+  }
+
+  /* 15.4 В mobile режиме Masonry-сетка превращается в один столбец */
+  .movie-grid {
+    column-count: 1;
+  }
+
+  /* 15.5 Убедимся, что логика показа «.nav-links-mobile» работает */
+  .nav-links-mobile {
+    right: var(--space-sm);
+    width: calc(100% - 2 * var(--space-sm));
   }
 }
