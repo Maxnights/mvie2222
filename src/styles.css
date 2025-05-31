@@ -105,12 +105,15 @@ a {
   padding: var(--space-sm) 0;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: background-color var(--transition);
+  position: relative;
+  z-index: 100;
 }
 .navbar-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-sm);
+  padding: 0 var(--space-sm);
 }
 .navbar-left {
   display: flex;
@@ -165,6 +168,8 @@ a {
   flex-direction: column;
   gap: 4px;
   cursor: pointer;
+  background: none;
+  border: none;
 }
 .hamburger span {
   display: block;
@@ -172,10 +177,10 @@ a {
   height: 3px;
   background: white;
   border-radius: 2px;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
 
-/* При добавлении класса .open к .hamburger, вращаем полоски в крестик */
+/* При добавлении класса .open к .hamburger, превращаем-полоски в крестик */
 .hamburger.open span:nth-child(1) {
   transform: translateY(6px) rotate(45deg);
 }
@@ -190,7 +195,7 @@ a {
 .nav-links-mobile {
   display: none; /* появится при клике на гамбургер */
   position: absolute;
-  top: 60px; /* чуть ниже шапки */
+  top: 56px; /* НАДО ПОДОГНАТЬ под высоту шапки (56px) */
   right: var(--space-sm);
   background: var(--color-nav-bg);
   border-radius: var(--radius);
@@ -327,12 +332,12 @@ a {
 .search-icon {
   position: absolute;
   top: 50%;
-  left: calc(var(--space-sm) + 4px);
+  left: var(--space-sm);
   transform: translateY(-50%);
   color: var(--color-text);
   font-size: 1.2rem;
   pointer-events: none;
-  transition: color var(--transition);
+  transition: left var(--transition), color var(--transition);
 }
 .search-input {
   width: 100%;
@@ -344,7 +349,9 @@ a {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-size: 1rem;
   color: var(--color-text);
-  transition: box-shadow var(--transition), transform var(--transition);
+  transition: box-shadow var(--transition),
+    transform var(--transition),
+    background var(--transition);
 }
 .search-input::placeholder {
   color: rgba(39, 35, 67, 0.5);
@@ -371,7 +378,7 @@ a {
   left: 0;
   right: 0;
   bottom: 0;
-  opacity: 0; /* скрыли, фон — body */
+  opacity: 0; /* фон задаётся body */
 }
 .search-hero-content {
   position: relative;
@@ -385,10 +392,17 @@ a {
   margin-bottom: var(--space-sm);
   font-weight: bold;
 }
+.home-hero h2,
+.home-hero p,
+.search-hero-title {
+  /* Для светлой темы (если data-theme !== "dark") текст делаем тёмным */
+  color: white;
+}
 
 /* === 10. Skeleton-заглушки (тема-aware) === */
 @keyframes pulse-skeleton {
-  0%, 100% {
+  0%,
+  100% {
     background-color: var(--skeleton-base);
   }
   50% {
@@ -642,23 +656,25 @@ html {
     flex-wrap: wrap;
     align-items: center;
     gap: var(--space-sm);
+    position: relative;
   }
   .navbar-logo {
     order: 1;
   }
-  .nav-links {
-    order: 2;
-    flex: 1;
-    justify-content: center;
-  }
   .theme-toggle {
-    order: 3;
+    order: 2;
     margin-left: auto;
   }
 
-  /* 15.2 Стрелка/иконка поиска немного увеличена и сдвинута */
+  /* Мобильное меню */
+  .nav-links-mobile {
+    right: var(--space-sm);
+    width: calc(100% - 2 * var(--space-sm));
+  }
+
+  /* 15.2 Увеличиваем иконку поиска, смещаем влево */
   .search-icon {
-    left: calc(var(--space-sm) + 2px);
+    left: var(--space-sm);
     font-size: 1.3rem;
   }
 
@@ -672,14 +688,20 @@ html {
     padding-left: calc(var(--space-sm) * 2 + 1rem);
   }
 
-  /* 15.4 В mobile режиме Masonry-сетка превращается в один столбец */
+  /* 15.4 Masonry-сетка в один столбец */
   .movie-grid {
     column-count: 1;
   }
+}
 
-  /* 15.5 Убедимся, что логика показа «.nav-links-mobile» работает */
-  .nav-links-mobile {
-    right: var(--space-sm);
-    width: calc(100% - 2 * var(--space-sm));
-  }
+/* === 16. Исправление цвета заголовка Hero в светлой теме === */
+:root:not([data-theme="dark"]) .search-hero-content h2,
+:root:not([data-theme="dark"]) .search-hero-content p {
+  color: var(--color-text);
+}
+
+/* === 17. Удаляем обводку у hamburger, если он внутри <button> === */
+.hamburger {
+  background: transparent !important;
+  border: none !important;
 }
