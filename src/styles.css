@@ -1,24 +1,16 @@
-/* === Анимированный градиент фона === */
-body {
-  background: linear-gradient(45deg, #1f1b24, #272343, #3a3a5a, #1f1b24);
-  background-size: 600% 600%;
-  animation: gradientShift 20s ease infinite;
-}
-@keyframes gradientShift {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
+/* =========================================
+   styles.css — Финальный вариант
+   Включает: 
+   • Переменные (темная/светлая тема)
+   • Сброс базовых стилей
+   • Навигация (Navbar + гамбургер + мобильное меню)
+   • Search-блок (с иконкой-лупой)
+   • Остальные глобальные стили (карточки, сетки и т.д.) 
+   ========================================= */
 
 /* === 0. Переменные тем === */
 :root {
-  /* Цвета */
+  /* Основные цвета (Light) */
   --color-primary: #1f1b24;
   --color-secondary: #e94560;
   --color-bg: #f6f6f6;
@@ -39,59 +31,56 @@ body {
   --radius: 0.75rem;
   --transition: 0.3s ease;
 
-  /* Skeleton цвета (Light) */
+  /* Skeleton (Light) */
   --skeleton-base: #e0e0e0;
   --skeleton-highlight: #f0f0f0;
 }
 
 :root[data-theme="dark"] {
+  /* Основные цвета (Dark) */
   --color-primary: #f6f6f6;
   --color-secondary: #e94560;
   --color-bg: #272343;
   --color-text: #f6f6f6;
   --color-nav-bg: #272343;
 
-  /* Skeleton цвета (Dark) */
+  /* Skeleton (Dark) */
   --skeleton-base: #2c2c2c;
   --skeleton-highlight: #3c3c3c;
 }
 
-/* === 1. Специально для .search-input в тёмной теме === */
-:root[data-theme="dark"] .search-input {
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-:root[data-theme="dark"] .search-input::placeholder {
-  color: rgba(246, 246, 246, 0.6);
-}
-:root[data-theme="dark"] .search-icon {
-  color: var(--color-text);
-}
-
-/* === 2. Сброс стилей === */
+/* === 1. Сброс базовых стилей === */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
+
+html {
+  transition: background-color var(--transition), color var(--transition);
+}
+
 body {
   font-family: var(--font-family);
   font-size: var(--font-size-base);
   line-height: var(--line-height);
   background: var(--color-bg);
   color: var(--color-text);
+  overflow-x: hidden;
 }
+
 a {
   text-decoration: none;
   color: inherit;
 }
 
-/* === 3. Утилиты === */
+/* === 2. Утилиты === */
 .container {
   max-width: 1200px;
   padding: var(--space-sm);
   margin: 0 auto;
 }
+
 .app-title {
   font-size: 2rem;
   color: var(--color-primary);
@@ -99,29 +88,36 @@ a {
   margin-bottom: var(--space-md);
 }
 
-/* === 4. Шапка (Navbar) === */
+/* === 3. Navbar (шапка) === */
 .navbar {
+  position: relative;
   background: var(--color-nav-bg);
   padding: var(--space-sm) 0;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   transition: background-color var(--transition);
+  z-index: 100;
 }
+
 .navbar-container {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
 }
+
 .navbar-left {
   display: flex;
   align-items: center;
   gap: var(--space-sm);
 }
+
+/* Логотип */
 .navbar-logo {
   font-size: 1.5rem;
   font-weight: bold;
   color: white;
 }
+
+/* Кнопка переключения темы */
 .theme-toggle {
   background: none;
   border: none;
@@ -130,16 +126,22 @@ a {
   color: white;
   transition: color var(--transition);
 }
+
 .theme-toggle:hover {
   color: var(--color-secondary);
 }
+
+/* Десктопные ссылки */
 .nav-links {
   list-style: none;
   display: flex;
   gap: var(--space-md);
 }
+
 .nav-item {
+  position: relative;
 }
+
 .nav-link {
   color: white;
   font-size: 1rem;
@@ -147,10 +149,12 @@ a {
   padding: var(--space-xs) 0;
   transition: color var(--transition);
 }
+
 .nav-link:hover,
 .nav-link.active {
   color: var(--color-secondary);
 }
+
 .nav-link.active::after {
   content: "";
   position: absolute;
@@ -161,18 +165,155 @@ a {
   background: var(--color-secondary);
 }
 
-/* === 4.1. Кнопка-гамбургер (изначально скрыта) === */
+/* Кнопка-гамбургер */
 .hamburger {
-  display: none; /* появится на мобилке */
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  color: white;
+  display: none;
+  flex-direction: column;
+  justify-content: center;
   cursor: pointer;
+  width: 2rem;
+  height: 1.5rem;
+  gap: 0.3rem;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.hamburger span {
+  display: block;
+  width: 100%;
+  height: 0.2rem;
+  background: white;
+  border-radius: 1px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+/* Анимация открытия/закрытия гамбургера */
+.hamburger.open span:nth-child(1) {
+  transform: translateY(0.55rem) rotate(45deg);
+}
+
+.hamburger.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger.open span:nth-child(3) {
+  transform: translateY(-0.55rem) rotate(-45deg);
+}
+
+/* Мобильное выпадающее меню (скрыто, пока menuOpen=false) */
+.nav-links-mobile {
+  display: none;
+}
+
+/* ========== Медиа-запросы для Navbar ========== */
+@media (max-width: 640px) {
+  /* Скрываем десктопные ссылки */
+  .nav-links {
+    display: none;
+  }
+  /* Показываем гамбургер */
+  .hamburger {
+    display: flex;
+  }
+  /* Стили открытого мобильного меню */
+  .nav-links-mobile {
+    display: block;
+    position: absolute;
+    top: 100%;
+    right: var(--space-sm);
+    width: calc(100% - 2 * var(--space-sm));
+    background: var(--color-nav-bg);
+    border-radius: var(--radius);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    overflow: hidden;
+    z-index: 50;
+  }
+  .nav-links-mobile .nav-item {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .nav-links-mobile .nav-item:last-child {
+    border-bottom: none;
+  }
+  .nav-link-mobile {
+    display: block;
+    padding: var(--space-md) var(--space-sm);
+    text-align: center;
+    color: white;
+    font-size: 1rem;
+    transition: background var(--transition), color var(--transition);
+  }
+  .nav-link-mobile:hover,
+  .nav-link-mobile.active {
+    background: rgba(233, 69, 96, 0.1);
+    color: var(--color-secondary);
+  }
+}
+
+/* === 4. Search-блок (страница Add) === */
+.search-box {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: var(--space-md) auto;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: var(--space-md);
+  transform: translateY(-50%);
+  color: var(--color-text);
+  font-size: 1.2rem;
+  pointer-events: none;
   transition: color var(--transition);
 }
 
-/* === 5. Карточка фильма (Glassmorphism) === */
+/* В тёмной теме иконка-лупа должна быть светлой */
+:root[data-theme="dark"] .search-icon {
+  color: var(--color-text);
+}
+
+.search-input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  padding-left: calc(var(--space-md) * 1.5);
+  border: none;
+  border-radius: var(--radius);
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  font-size: 1rem;
+  color: var(--color-text);
+  transition: box-shadow var(--transition), transform var(--transition),
+    background var(--transition), color var(--transition);
+}
+
+.search-input::placeholder {
+  color: rgba(39, 35, 67, 0.5);
+  font-style: italic;
+}
+
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-secondary);
+  transform: scale(1.02);
+}
+
+/* В тёмной теме фон и цвет placeholder меняются */
+:root[data-theme="dark"] .search-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-text);
+}
+
+:root[data-theme="dark"] .search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* === 5. Стили для карточек фильмов, Masonry-сетка и др. === */
+/* См. уже присутствующие у вас стили — эту часть можно оставить без изменений,
+   либо объединить с уже существующими правилами для карточек, movie-grid и т.д. */
+
 .movie-card {
   position: relative;
   background: rgba(255, 255, 255, 0.1);
@@ -181,17 +322,21 @@ a {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-  will-change: box-shadow;
-  transition: box-shadow var(--transition), border-color var(--transition);
+  transition: box-shadow var(--transition), border-color var(--transition),
+    transform var(--transition);
 }
+
 .movie-card:hover {
+  transform: none;
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
   border-color: rgba(255, 255, 255, 0.4);
 }
+
 .movie-poster {
   width: 100%;
   display: block;
 }
+
 .movie-info {
   position: absolute;
   bottom: 0;
@@ -199,15 +344,18 @@ a {
   background: linear-gradient(to top, rgba(31, 27, 36, 0.85), transparent);
   padding: var(--space-sm);
 }
+
 .movie-title {
   font-size: 1.25rem;
   color: white;
   margin-bottom: 0.25rem;
 }
+
 .movie-year {
   font-size: 0.875rem;
   color: #ddd;
 }
+
 .inner-card-controls {
   position: absolute;
   top: var(--space-sm);
@@ -215,6 +363,7 @@ a {
   display: flex;
   gap: var(--space-xs);
 }
+
 .ctrl-btn {
   background-color: rgba(0, 0, 0, 0.6);
   border: none;
@@ -223,43 +372,52 @@ a {
   cursor: pointer;
   transition: background-color var(--transition);
 }
+
 .ctrl-btn:hover {
   background-color: var(--color-secondary);
 }
+
 .ctrl-btn i {
   color: white;
   font-size: 1rem;
 }
 
-/* === 6. Masonry-сетка вместо grid для списка фильмов === */
+/* Masonry-сетка вместо grid */
 .movie-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: var(--space-md);
-  justify-items: center;
+  column-width: 260px;
+  column-gap: var(--space-md);
 }
+
 @media (max-width: 900px) {
   .movie-grid {
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    column-count: 2;
   }
 }
 @media (max-width: 600px) {
   .movie-grid {
-    grid-template-columns: 1fr;
+    column-count: 1;
   }
 }
 
-/* === 7. Страницы Watchlist/Watched === */
+.movie-grid .movie-card {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: var(--space-md);
+}
+
+/* Стили страницы Watchlist/Watched */
 .movie-page .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
   margin-bottom: 2rem;
 }
+
 .movie-page .heading {
   font-size: 2rem;
   color: var(--color-primary);
 }
+
 .movie-page .count-pill {
   background: var(--color-secondary);
   color: white;
@@ -268,138 +426,71 @@ a {
   font-size: 0.875rem;
 }
 
-/* === 8. Search на Add === */
-.search-box {
-  position: relative;
-  width: 100%;
-  max-width: 600px;
-  margin: var(--space-md) auto;
-}
-.search-icon {
-  position: absolute;
-  top: 50%;
-  left: var(--space-sm);
-  transform: translateY(-50%);
-  color: var(--color-text);
-  font-size: 1rem;
-  pointer-events: none;
-  transition: left var(--transition);
-}
-.search-input {
-  width: 100%;
-  padding: var(--space-sm) var(--space-md);
-  padding-left: calc(var(--space-sm) * 2 + 1rem);
-  border: none;
-  border-radius: var(--radius);
-  background: white;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  font-size: 1rem;
-  color: var(--color-text);
-  transition: box-shadow var(--transition), transform var(--transition);
-}
-.search-input::placeholder {
-  color: rgba(39, 35, 67, 0.5);
-}
-.search-input:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px var(--color-secondary);
-  transform: scale(1.02);
-}
-
-/* === 9. Hero Banner на Add === */
-.search-hero {
-  position: relative;
-  height: 300px;
-  display: flex;
-  align-items: center;
-  overflow: hidden;
-  margin-bottom: var(--space-md);
-}
-.search-hero-bg {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  opacity: 0; /* фоновый градиент родителя */
-}
-.search-hero-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  color: white;
-  padding: var(--space-md) 0;
-}
-.search-hero-title {
-  font-size: 2.5rem;
-  margin-bottom: var(--space-sm);
-  font-weight: bold;
-}
-
-/* === 10. Skeleton-заглушки (тема-aware) === */
+/* === 6. Skeleton-заглушки === */
 @keyframes pulse-skeleton {
-  0%, 100% {
+  0%,
+  100% {
     background-color: var(--skeleton-base);
   }
   50% {
     background-color: var(--skeleton-highlight);
   }
 }
+
 .skeleton-card {
   width: 240px;
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
 }
+
 .skeleton-poster,
 .skeleton-text-line {
   background-color: var(--skeleton-base);
   animation: pulse-skeleton 1.5s ease-in-out infinite;
   border-radius: var(--radius);
 }
+
 .skeleton-poster {
   height: 360px;
 }
+
 .skeleton-text-line {
   height: 16px;
 }
+
 .skeleton-text-line.short {
   width: 40%;
 }
+
 .skeleton-text-line.long {
   width: 80%;
 }
 
-/* === 11. Плавный переход при смене темы === */
+/* === 7. Плавный переход темы === */
 body,
 .navbar,
 .search-input,
-.movie-card {
+.movie-card,
+ul,
+.nav-links-mobile {
   transition: background-color var(--transition), color var(--transition),
-              box-shadow var(--transition), border-color var(--transition);
-}
-html {
-  transition: background-color var(--transition), color var(--transition);
+    box-shadow var(--transition), border-color var(--transition);
 }
 
-/* === 11.1. Hero-заголовок для светлой темы (фикс цвета) === */
-:root:not([data-theme="dark"]) .search-hero-content h2,
-:root:not([data-theme="dark"]) .search-hero-content p {
-  color: var(--color-text);
-}
-
-/* === 12. Сетка результатов на Add === */
+/* === 8. Сетка результатов на Add === */
 .results {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  grid-auto-rows: 1fr;
   gap: var(--space-md);
   justify-items: center;
 }
 
-/* === 13. Карточка результата (ResultCard) === */
+/* === 9. Стили для ResultCard (если нужно) === */
 .result-card {
   position: relative;
   width: 100%;
@@ -413,44 +504,53 @@ html {
   flex-direction: column;
   height: 100%;
 }
+
 .result-card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
+
 .poster-wrapper {
   width: 100%;
   height: 360px;
   background: #eee;
 }
+
 .poster-wrapper img {
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
-.result-card .info {
+
+.info {
   padding: var(--space-sm);
   display: flex;
   flex-direction: column;
-  flex: 1; /* занимает всё место между постером и кнопками */
+  flex: 1;
 }
-.result-card .header {
+
+.header {
   margin-bottom: var(--space-xs);
 }
-.result-card .title {
+
+.title {
   font-size: 1.1rem;
   margin: 0;
   color: var(--color-primary);
 }
-.result-card .release-date {
+
+.release-date {
   font-size: 0.875rem;
   color: var(--color-secondary);
   margin: 0.25rem 0 0;
 }
-.result-card .controls {
+
+.controls {
   display: flex;
   gap: var(--space-xs);
   margin-top: var(--space-sm);
 }
-.result-card .btn {
+
+.btn {
   flex: 1;
   padding: var(--space-xs) var(--space-sm);
   background: var(--color-secondary);
@@ -465,97 +565,12 @@ html {
   gap: 0.5ch;
   transition: background var(--transition);
 }
-.result-card .btn:disabled {
+
+.btn:disabled {
   background: rgba(39, 35, 67, 0.3);
   cursor: not-allowed;
 }
-.result-card .btn i {
+
+.btn i {
   font-size: 1rem;
-}
-
-/* === 14. Мобильная адаптация === */
-@media (max-width: 640px) {
-  /* 14.1 Скрываем «десктопные» вкладки и показываем гамбургер */
-  .nav-links {
-    display: none !important;
-  }
-  .nav-links li {
-    display: none !important;
-  }
-  .hamburger {
-    display: flex !important;
-  }
-
-  /* 14.2 Переупорядочиваем элементы шапки */
-  .navbar-container {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--space-sm);
-    position: relative;
-  }
-  .navbar-logo {
-    order: 1;
-  }
-  .theme-toggle {
-    order: 2;
-    margin-left: auto;
-  }
-
-  /* 14.3 Мобильное выпадающее меню */
-  .nav-links-mobile {
-    position: absolute;
-    top: calc(100% + var(--space-xs));
-    right: var(--space-sm);
-    width: calc(100% - 2 * var(--space-sm));
-    background: var(--color-nav-bg);
-    border-radius: var(--radius);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    z-index: 10;
-  }
-  .nav-links-mobile li {
-    list-style: none;
-  }
-  .nav-links-mobile .nav-link {
-    display: block;
-    padding: var(--space-md) var(--space-sm);
-    text-align: center;
-    width: 100%;
-  }
-  .nav-links-mobile .nav-link:hover,
-  .nav-links-mobile .nav-link.active {
-    background: rgba(233, 69, 96, 0.1);
-    color: var(--color-secondary);
-  }
-
-  /* 14.4 Корректировка иконки поиска */
-  .search-icon {
-    left: var(--space-sm);
-    font-size: 1.3rem;
-  }
-  .search-box {
-    width: 100%;
-    padding: 0 var(--space-sm);
-    box-sizing: border-box;
-  }
-  .search-input {
-    padding-left: calc(var(--space-sm) * 2 + 1rem);
-  }
-
-  /* 14.5 Masonry-сетка в один столбец */
-  .movie-grid {
-    grid-template-columns: 1fr;
-  }
-
-  /* 14.6 Сдвигаем лупу чуть правее (только для мобильных) */
-  .search-icon {
-    left: calc(var(--space-sm) + 0.5rem);
-  }
-}
-
-/* === 15. Исправление цвета заголовка Hero в светлой теме === */
-:root:not([data-theme="dark"]) .search-hero-content h2,
-:root:not([data-theme="dark"]) .search-hero-content p {
-  color: var(--color-text);
 }
