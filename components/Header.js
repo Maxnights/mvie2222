@@ -2,29 +2,29 @@
 import React, { useContext, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { GlobalContext } from "../context/GlobalState";
+import "{/* Здесь у вас, вероятно, подключается иконка темы, например: */}";
+// import { ReactComponent as SunIcon } from "../assets/sun.svg";
+// import { ReactComponent as MoonIcon } from "../assets/moon.svg";
 
 export const Header = () => {
-  // Предполагается, что в GlobalContext есть:
-  //   theme       — текущая тема ("light" или "dark")
-  //   toggleTheme — функция для переключения темы
-  const { theme, toggleTheme } = useContext(GlobalContext);
+  const { theme, toggleTheme } = useContext(GlobalContext); 
+  // Предположим, что у вас в контексте есть текущее состояние темы
+  // и функция toggleTheme(), меняющая тему (light↔dark).
 
-  // Состояние мобильного меню
   const [menuOpen, setMenuOpen] = useState(false);
-  // Чтобы подсветить активную ссылку
   const location = useLocation();
 
-  // Закрываем меню при переходе по ссылке
+  // Закрыть меню, если перешли по ссылке
   const handleLinkClick = () => {
     setMenuOpen(false);
   };
 
   return (
     <header className="navbar">
-      <div className="navbar-container container">
-        {/* Левый блок: логотип → переключатель темы → гамбургер */}
+      <div className="navbar-container">
+        {/* Левая часть: логотип → переключатель темы → гамбургер */}
         <div className="navbar-left">
-          {/* 1) Логотип */}
+          {/* 1) Ваш логотип */}
           <Link to="/" className="navbar-logo" onClick={handleLinkClick}>
             MyMovies
           </Link>
@@ -34,29 +34,29 @@ export const Header = () => {
             className="theme-toggle"
             onClick={() => {
               toggleTheme();
-              // не закрываем меню при переключении темы
+              // если меню открыто, пусть остаётся открытым
             }}
             aria-label="Toggle theme"
           >
             {theme === "dark" ? "☀️" : "🌙"}
+            {/* Можно заменить на SVG-иконки: <SunIcon /> / <MoonIcon /> */}
           </button>
 
-          {/* 3) Кнопка-гамбургер (появляется на мобильных) */}
+          {/* 3) Гамбургер */}
           <button
             className={`hamburger ${menuOpen ? "open" : ""}`}
             onClick={() => setMenuOpen((prev) => !prev)}
             aria-label={menuOpen ? "Close menu" : "Open menu"}
           >
-            {/* Три полоски */}
             <span />
             <span />
             <span />
           </button>
         </div>
 
-        {/* Правый блок: десктопное меню (скрывается на мобильных) */}
+        {/* Правая часть: обычные ссылки, но они будут скрыты на мобильных */}
         <ul className="nav-links">
-          <li className="nav-item">
+          <li>
             <Link
               to="/"
               className={`nav-link ${
@@ -66,7 +66,7 @@ export const Header = () => {
               Watchlist
             </Link>
           </li>
-          <li className="nav-item">
+          <li>
             <Link
               to="/add"
               className={`nav-link ${
@@ -76,7 +76,7 @@ export const Header = () => {
               Add
             </Link>
           </li>
-          <li className="nav-item">
+          <li>
             <Link
               to="/watched"
               className={`nav-link ${
@@ -88,44 +88,42 @@ export const Header = () => {
           </li>
         </ul>
 
-        {/* Мобильное выпадающее меню (появляется, когда menuOpen === true) */}
-        {menuOpen && (
-          <ul className="nav-links-mobile">
-            <li className="nav-item">
-              <Link
-                to="/"
-                className={`nav-link-mobile ${
-                  location.pathname === "/" ? "active" : ""
-                }`}
-                onClick={handleLinkClick}
-              >
-                Watchlist
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                to="/add"
-                className={`nav-link-mobile ${
-                  location.pathname === "/add" ? "active" : ""
-                }`}
-                onClick={handleLinkClick}
-              >
-                Add
-              </Link>
-            </li>
-            <li className="nav-item">
-              <Link
-                to="/watched"
-                className={`nav-link-mobile ${
-                  location.pathname === "/watched" ? "active" : ""
-                }`}
-                onClick={handleLinkClick}
-              >
-                Watched
-              </Link>
-            </li>
-          </ul>
-        )}
+        {/* 4) Выпадающее меню для мобильных, показывается только когда menuOpen=true */}
+        <ul className={`nav-links-mobile ${menuOpen ? "open" : ""}`}>
+          <li>
+            <Link
+              to="/"
+              className={`nav-link-mobile ${
+                location.pathname === "/" ? "active" : ""
+              }`}
+              onClick={handleLinkClick}
+            >
+              Watchlist
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/add"
+              className={`nav-link-mobile ${
+                location.pathname === "/add" ? "active" : ""
+              }`}
+              onClick={handleLinkClick}
+            >
+              Add
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/watched"
+              className={`nav-link-mobile ${
+                location.pathname === "/watched" ? "active" : ""
+              }`}
+              onClick={handleLinkClick}
+            >
+              Watched
+            </Link>
+          </li>
+        </ul>
       </div>
     </header>
   );
