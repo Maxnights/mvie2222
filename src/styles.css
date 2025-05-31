@@ -705,3 +705,10 @@ html {
   background: transparent !important;
   border: none !important;
 }
+
+@media (max-width: 640px) {
+  /* Сдвигаем лупу правее только на мобильных */
+  .search-icon {
+    left: calc(var(--space-sm) + 1rem);
+  }
+}
