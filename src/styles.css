@@ -195,7 +195,7 @@ a {
 .nav-links-mobile {
   display: none; /* появится при клике на гамбургер */
   position: absolute;
-  top: 100px; /* регулируем под высоту шапки */
+  top: 40px; /* регулируем под высоту шапки */
   right: var(--space-sm);
   background: var(--color-nav-bg);
   border-radius: var(--radius);
