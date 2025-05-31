@@ -16,112 +16,171 @@ body {
   }
 }
 
-/* === 1. Базовые переменные === */
+/* === 0. Переменные тем === */
 :root {
-  --color-text: #e9e9e9;
-  --color-nav-bg: rgba(20, 18, 23, 0.85);
-  --color-nav-hover: rgba(233, 69, 96, 0.2);
-  --color-bg: rgba(31, 27, 36, 0.9);
-  --color-card-bg: rgba(255, 255, 255, 0.1);
-  --color-primary: #e94560;
-  --color-primary-hover: #d13450;
+  /* Цвета */
+  --color-primary: #1f1b24;
+  --color-secondary: #e94560;
+  --color-bg: #f6f6f6;
+  --color-text: #272343;
+  --color-nav-bg: #1f1b24;
+
+  /* Типографика */
   --font-family: "Inter", sans-serif;
-  --font-size-base: 16px;
-  --radius: 8px;
-  --transition: 0.25s ease;
-  --space-xs: 4px;
-  --space-sm: 8px;
-  --space-md: 16px;
-  --space-lg: 24px;
-  --space-xl: 32px;
+  --font-size-base: 1rem;
+  --line-height: 1.5;
+
+  /* Отступы */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+
+  /* Скругления и переходы */
+  --radius: 0.75rem;
+  --transition: 0.3s ease;
+
+  /* Skeleton цвета (Light) */
+  --skeleton-base: #e0e0e0;
+  --skeleton-highlight: #f0f0f0;
+}
+
+:root[data-theme="dark"] {
+  --color-primary: #f6f6f6;
+  --color-secondary: #e94560;
+  --color-bg: #272343;
+  --color-text: #f6f6f6;
+  --color-nav-bg: #272343;
+
+  /* Skeleton цвета (Dark) */
+  --skeleton-base: #2c2c2c;
+  --skeleton-highlight: #3c3c3c;
+}
+
+/* === 1. Специально для search-input и иконки в темной теме === */
+:root[data-theme="dark"] .search-input {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+:root[data-theme="dark"] .search-input::placeholder {
+  color: rgba(246, 246, 246, 0.6);
+}
+:root[data-theme="dark"] .search-icon {
+  color: var(--color-text);
 }
 
 /* === 2. Сброс стилей === */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
 }
-html,
 body {
-  height: 100%;
-  width: 100%;
   font-family: var(--font-family);
   font-size: var(--font-size-base);
+  line-height: var(--line-height);
+  background: var(--color-bg);
   color: var(--color-text);
-  overflow-x: hidden;
 }
 a {
-  color: inherit;
   text-decoration: none;
-}
-ul {
-  list-style: none;
-}
-button {
-  cursor: pointer;
-  background: transparent;
-  border: none;
+  color: inherit;
 }
 
-/* === 3. Шапка (navbar) === */
+/* === 3. Утилиты === */
+.container {
+  max-width: 1200px;
+  padding: var(--space-sm);
+  margin: 0 auto;
+}
+.app-title {
+  font-size: 2rem;
+  color: var(--color-primary);
+  text-align: center;
+  margin-bottom: var(--space-md);
+}
+
+/* === 4. Шапка (Navbar) === */
 .navbar {
-  position: relative;
-  width: 100%;
   background: var(--color-nav-bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
   padding: var(--space-sm) 0;
-  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  transition: background-color var(--transition);
+  position: relative;
   z-index: 100;
 }
 .navbar-container {
-  width: 90%;
-  max-width: 1200px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  position: relative;
+  gap: var(--space-sm);
+  padding: 0 var(--space-sm);
+}
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
 }
 .navbar-logo {
   font-size: 1.5rem;
   font-weight: bold;
-  color: var(--color-text);
+  color: white;
+}
+.theme-toggle {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: white;
+  transition: color var(--transition);
+}
+.theme-toggle:hover {
+  color: var(--color-secondary);
 }
 .nav-links {
+  list-style: none;
   display: flex;
   gap: var(--space-md);
 }
-.nav-links li a {
+.nav-link {
+  color: white;
   font-size: 1rem;
-  padding: var(--space-xs) var(--space-sm);
-  border-radius: var(--radius);
-  transition: background var(--transition);
-}
-.nav-links li a:hover,
-.nav-links li a.active {
-  background: var(--color-nav-hover);
-}
-.hamburger {
-  display: none;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 24px;
-  height: 18px;
   position: relative;
-  z-index: 1100;
+  padding: var(--space-xs) 0;
+  transition: color var(--transition);
+}
+.nav-link:hover,
+.nav-link.active {
+  color: var(--color-secondary);
+}
+.nav-link.active::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: var(--color-secondary);
+}
+
+/* === 4.1. Иконка-гамбургер === */
+.hamburger {
+  display: none; /* показываем только в мобильном режиме */
+  flex-direction: column;
+  gap: 4px;
+  cursor: pointer;
+  background: none;
+  border: none;
 }
 .hamburger span {
   display: block;
-  width: 100%;
+  width: 24px;
   height: 3px;
-  background: var(--color-text);
-  border-radius: var(--radius);
-  transition: all var(--transition);
+  background: white;
+  border-radius: 2px;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 }
+
+/* При добавлении класса .open к .hamburger, превращаем-полоски в крестик */
 .hamburger.open span:nth-child(1) {
   transform: translateY(6px) rotate(45deg);
 }
@@ -132,55 +191,36 @@ button {
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* === 4. Меню навигации (горизонтальное и мобильное) === */
-
-/* === 4.1. Горизонтальное меню === */
-.nav-links {
-  display: flex;
-  gap: var(--space-md);
-}
-@media (max-width: 1024px) {
-  .nav-links li a {
-    font-size: 0.9rem;
-  }
-}
-
 /* === 4.2. Мобильное меню (спрятано по умолчанию) === */
 .nav-links-mobile {
   display: none; /* появится при клике на гамбургер */
   position: absolute;
-  top: 100%; /* меню будет выезжать сразу под шапкой */
-  left: var(--space-sm); /* меню «прижато» к левому краю шапки */
+  top: 56px; /* регулируем под высоту шапки */
+  right: var(--space-sm);
   background: var(--color-nav-bg);
   border-radius: var(--radius);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   list-style: none;
   padding: var(--space-md) 0;
-  width: 180px; /* чуть шире, чем 160px, чтобы текст не упирался */
+  width: 160px;
   z-index: 1000;
-  transition: opacity var(--transition), transform var(--transition);
-  opacity: 0;
-  transform: translateY(-10px);
 }
 .nav-links-mobile.open {
   display: block;
-  opacity: 1;
-  transform: translateY(0);
 }
 .nav-links-mobile li {
   margin: var(--space-xs) 0;
   text-align: center;
 }
 .nav-links-mobile li a {
-  color: var(--color-text);
+  color: white;
   font-size: 1rem;
   padding: var(--space-xs) var(--space-md);
   display: block;
-  transition: background var(--transition);
 }
 .nav-links-mobile li a:hover,
 .nav-links-mobile li a.active {
-  background: var(--color-nav-hover);
+  background: rgba(233, 69, 96, 0.2);
 }
 
 /* === 5. Карточка фильма (Glassmorphism) === */
@@ -192,185 +232,397 @@ button {
   border-radius: var(--radius);
   overflow: hidden;
   box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
-  transition: transform var(--transition), box-shadow var(--transition);
-}
-.movie-card img {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-.movie-card .movie-info {
-  padding: var(--space-md);
-}
-.movie-card .movie-title {
-  font-size: 1.2rem;
-  margin-bottom: var(--space-xs);
-}
-.movie-card .movie-rating {
-  font-size: 0.9rem;
-  color: var(--color-primary);
+  transition: box-shadow var(--transition), border-color var(--transition);
 }
 .movie-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.7);
+  transform: none;
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
+  border-color: rgba(255, 255, 255, 0.4);
 }
-
-/* === 6. Модальные окна === */
-.modal {
-  position: fixed;
-  top: 0;
-  left: 0;
+.movie-poster {
   width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  z-index: 2000;
+  display: block;
 }
-.modal.open {
-  display: flex;
+.movie-info {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(31, 27, 36, 0.85), transparent);
+  padding: var(--space-sm);
 }
-.modal-content {
-  background: var(--color-bg);
-  padding: var(--space-lg);
-  border-radius: var(--radius);
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7);
-  position: relative;
+.movie-title {
+  font-size: 1.25rem;
+  color: white;
+  margin-bottom: 0.25rem;
 }
-.modal-close {
+.movie-year {
+  font-size: 0.875rem;
+  color: #ddd;
+}
+.inner-card-controls {
   position: absolute;
   top: var(--space-sm);
   right: var(--space-sm);
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--color-text);
+  display: flex;
+  gap: var(--space-xs);
 }
-
-/* === 7. Поиск (Search Box) === */
-.search-box {
-  position: relative;
-  width: 300px;
-  margin: 0 auto;
-}
-.search-box input {
-  width: 100%;
-  padding: var(--space-sm) var(--space-lg);
+.ctrl-btn {
+  background-color: rgba(0, 0, 0, 0.6);
   border: none;
-  border-radius: var(--radius);
-  background: rgba(255, 255, 255, 0.2);
-  color: var(--color-text);
+  border-radius: 50%;
+  padding: var(--space-xs);
+  cursor: pointer;
+  transition: background-color var(--transition);
+}
+.ctrl-btn:hover {
+  background-color: var(--color-secondary);
+}
+.ctrl-btn i {
+  color: white;
   font-size: 1rem;
 }
-.search-box input::placeholder {
-  color: rgba(255, 255, 255, 0.7);
+
+/* === 6. Masonry-сетка вместо grid === */
+.movie-grid {
+  column-width: 260px;
+  column-gap: var(--space-md);
 }
-.search-box .search-icon {
+@media (max-width: 900px) {
+  .movie-grid {
+    column-count: 2;
+  }
+}
+@media (max-width: 600px) {
+  .movie-grid {
+    column-count: 1;
+  }
+}
+.movie-grid .movie-card {
+  display: inline-block;
+  width: 100%;
+  margin-bottom: var(--space-md);
+}
+
+/* === 7. Страница Watchlist/Watched === */
+.movie-page .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+.movie-page .heading {
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+.movie-page .count-pill {
+  background: var(--color-secondary);
+  color: white;
+  padding: var(--space-xs) var(--space-sm);
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+}
+
+/* === 8. Search на Add === */
+.search-box {
+  position: relative;
+  width: 100%;
+  max-width: 600px;
+  margin: var(--space-md) auto;
+}
+.search-icon {
   position: absolute;
   top: 50%;
   left: var(--space-sm);
   transform: translateY(-50%);
-  font-size: 1.2rem;
   color: var(--color-text);
+  font-size: 1.2rem;
+  pointer-events: none;
+  transition: left var(--transition), color var(--transition);
 }
-
-/* === 8. Кнопки и формы === */
-button,
-input[type="submit"] {
-  background: var(--color-primary);
-  color: #fff;
+.search-input {
+  width: 100%;
+  padding: var(--space-sm) var(--space-md);
+  padding-left: calc(var(--space-sm) * 2 + 1rem);
   border: none;
   border-radius: var(--radius);
-  padding: var(--space-sm) var(--space-md);
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-size: 1rem;
-  transition: background var(--transition);
-}
-button:hover,
-input[type="submit"]:hover {
-  background: var(--color-primary-hover);
-}
-input,
-textarea {
-  background: var(--color-bg);
   color: var(--color-text);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: var(--radius);
-  padding: var(--space-sm) var(--space-md);
-  font-size: 1rem;
+  transition: box-shadow var(--transition),
+    transform var(--transition),
+    background var(--transition);
+}
+.search-input::placeholder {
+  color: rgba(39, 35, 67, 0.5);
+  font-style: italic;
+}
+.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--color-secondary);
+  transform: scale(1.02);
 }
 
-/* === 9. Карточки с контентом (общие) === */
-.card {
-  background: var(--color-bg);
-  border-radius: var(--radius);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+/* === 9. Hero Banner на Add === */
+.search-hero {
+  position: relative;
+  height: 300px;
+  display: flex;
+  align-items: center;
   overflow: hidden;
-}
-.card .card-content {
-  padding: var(--space-md);
-}
-
-/* === 10. Тайпография === */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  color: var(--color-text);
-  margin-bottom: var(--space-sm);
-}
-p {
   margin-bottom: var(--space-md);
-  line-height: 1.5;
+}
+.search-hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0; /* фон задаётся body */
+}
+.search-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: white;
+  padding: var(--space-md) 0;
+}
+.search-hero-title {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-sm);
+  font-weight: bold;
+}
+.home-hero h2,
+.home-hero p,
+.search-hero-title {
+  /* Для светлой темы (если data-theme !== "dark") текст делаем тёмным */
+  color: white;
 }
 
-/* === 11. Сетки (Grid layouts) === */
-.grid {
-  display: grid;
-  gap: var(--space-md);
-}
-@media (min-width: 768px) {
-  .grid-2 {
-    grid-template-columns: repeat(2, 1fr);
+/* === 10. Skeleton-заглушки (тема-aware) === */
+@keyframes pulse-skeleton {
+  0%,
+  100% {
+    background-color: var(--skeleton-base);
   }
-  .grid-3 {
-    grid-template-columns: repeat(3, 1fr);
+  50% {
+    background-color: var(--skeleton-highlight);
   }
 }
-@media (min-width: 1024px) {
-  .grid-4 {
-    grid-template-columns: repeat(4, 1fr);
-  }
+.skeleton-card {
+  width: 240px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+.skeleton-poster,
+.skeleton-text-line {
+  background-color: var(--skeleton-base);
+  animation: pulse-skeleton 1.5s ease-in-out infinite;
+  border-radius: var(--radius);
+}
+.skeleton-poster {
+  height: 360px;
+}
+.skeleton-text-line {
+  height: 16px;
+}
+.skeleton-text-line.short {
+  width: 40%;
+}
+.skeleton-text-line.long {
+  width: 80%;
 }
 
-/* === 12. Footer (подвал) === */
-.footer {
+/* === 11. Плавный переход темы === */
+body,
+.navbar,
+.search-input,
+.movie-card {
+  transition: background-color var(--transition), color var(--transition),
+    box-shadow var(--transition), border-color var(--transition);
+}
+html {
+  transition: background-color var(--transition), color var(--transition);
+}
+
+/* === Hero-баннер на Home === */
+.home-hero {
+  height: 200px;
   background: var(--color-nav-bg);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.home-hero h2 {
+  font-size: 2.5rem;
+  margin-bottom: var(--space-xs);
+}
+.home-hero p {
+  font-size: 1.2rem;
+}
+
+/* === Секции каруселей === */
+.carousel-section {
   padding: var(--space-md) 0;
   text-align: center;
 }
-.footer p {
-  color: var(--color-text);
-  font-size: 0.9rem;
+.carousel-section h3 {
+  display: inline-block;
+  margin-bottom: var(--space-sm);
+  color: var(--color-primary);
 }
 
-/* === 13. Кастомные scrollbar’ы === */
-::-webkit-scrollbar {
-  width: 8px;
+/* === Улучшаем видимость оборотной стороны 3D карточки в Dark Theme === */
+:root[data-theme="dark"] .card-back {
+  background: rgba(255, 255, 255, 0.15) !important;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+:root[data-theme="dark"] .card-back-title,
+:root[data-theme="dark"] .card-back-year {
+  color: white !important;
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
+:root[data-theme="dark"] .card-back-controls .ctrl-btn i {
+  color: white !important;
+}
+
+/* === Улучшаем видимость search-input в тёмной теме ещё раз === */
+:root[data-theme="dark"] .search-input {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: var(--color-text);
+}
+:root[data-theme="dark"] .search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+/* === Динамический фон для Home (необязательно) === */
+.home-wrapper {
+  position: relative;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.1);
+  overflow: hidden;
+}
+.home-wrapper::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: -10%;
+  width: 120%;
+  height: 120%;
+  background-image: inherit;
+  background-size: cover;
+  background-position: center;
+  filter: blur(30px);
+  transform: scale(1.05);
+  z-index: 0;
+}
+.home-wrapper .overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(31, 27, 36, 0.6);
+  z-index: 1;
+}
+.home-wrapper .home-page {
+  position: relative;
+  z-index: 2;
+  padding-top: var(--space-md);
+}
+
+/* === 12. Сетка результатов на Add === */
+.results {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: var(--space-md);
+  justify-items: center;
+}
+
+/* === 13. Карточка результата === */
+.result-card {
+  position: relative;
+  width: 100%;
+  max-width: 240px;
+  background: var(--color-bg);
   border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow var(--transition), transform var(--transition);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.4);
+.result-card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+/* Постер */
+.poster-wrapper {
+  width: 100%;
+  height: 360px;
+  background: #eee;
+}
+.poster-wrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Инфо-блок */
+.info {
+  padding: var(--space-sm);
+  display: flex;
+  flex-direction: column;
+  flex: 1; /* занимает всё пространство между постером и контролами */
+}
+.header {
+  margin-bottom: var(--space-xs);
+}
+.title {
+  font-size: 1.1rem;
+  margin: 0;
+  color: var(--color-primary);
+}
+.release-date {
+  font-size: 0.875rem;
+  color: var(--color-secondary);
+  margin: 0.25rem 0 0;
+}
+
+/* Кнопки управления результатами */
+.controls {
+  display: flex;
+  gap: var(--space-xs);
+  margin-top: var(--space-sm);
+}
+.btn {
+  flex: 1;
+  padding: var(--space-xs) var(--space-sm);
+  background: var(--color-secondary);
+  color: white;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5ch;
+  transition: background var(--transition);
+}
+.btn:disabled {
+  background: rgba(39, 35, 67, 0.3);
+  cursor: not-allowed;
+}
+.btn i {
+  font-size: 1rem;
 }
 
 /* === 14. Плавный переход темы (еще раз) === */
@@ -414,46 +666,38 @@ html {
     margin-left: auto;
   }
 
-  /* 15.2 Меню гамбургера */
+  /* Мобильное меню */
   .nav-links-mobile {
-    /* остались базовые стили: width и позиционирование */
-    /* ширина 180px для эстетики */
-    width: 180px;
-    /* прижимаем слева к шапке (как у бургер-кнопки) */
-    left: var(--space-sm);
-    /* top: 100% - чтобы меню выпадало точно под шапку */
-    top: 100%;
-    /* Отключаем все расчёты на 100% ширины, чтобы не растягивалось */
-    right: auto;
+    right: var(--space-sm);
+    width: calc(100% - 2 * var(--space-sm));
   }
 
-  /* 15.3 Увеличиваем иконку поиска, смещаем влево */
+  /* 15.2 Увеличиваем иконку поиска, смещаем влево */
   .search-icon {
     left: var(--space-sm);
     font-size: 1.3rem;
   }
 
-  /* 15.4 Корректируем отступы у search-box */
+  /* 15.3 Корректируем отступы у search-box */
   .search-box {
     width: 100%;
     padding: 0 var(--space-sm);
     box-sizing: border-box;
   }
+  .search-input {
+    padding-left: calc(var(--space-sm) * 2 + 1rem);
+  }
 
-  /* 15.5 Сетка карточек: 2 колонки вместо 3 */
-  .grid-3 {
-    grid-template-columns: repeat(2, 1fr);
+  /* 15.4 Masonry-сетка в один столбец */
+  .movie-grid {
+    column-count: 1;
   }
 }
 
-/* === 16. Адаптация для tablet (от 640px до 1023px) === */
-@media (min-width: 640px) and (max-width: 1023px) {
-  .search-box {
-    width: 60%;
-  }
-  .grid-3 {
-    grid-template-columns: repeat(3, 1fr);
-  }
+/* === 16. Исправление цвета заголовка Hero в светлой теме === */
+:root:not([data-theme="dark"]) .search-hero-content h2,
+:root:not([data-theme="dark"]) .search-hero-content p {
+  color: var(--color-text);
 }
 
 /* === 17. Удаляем обводку у hamburger, если он внутри <button> === */
@@ -462,9 +706,8 @@ html {
   border: none !important;
 }
 
-/* === 18. Дополнительные мелкие правки для мобильной версии === */
 @media (max-width: 640px) {
-  /* Слегка смещаем лупу правее */
+  /* Сдвигаем лупу правее только на мобильных */
   .search-icon {
     left: calc(var(--space-sm) + 1rem);
   }
