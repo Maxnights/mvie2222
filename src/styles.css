@@ -442,7 +442,7 @@ a {
 .skeleton-text-line.short {
   width: 40%;
 }
-.skeleton-text-line.long { 
+.skeleton-text-line.long {
   width: 80%;
 }
 
@@ -458,7 +458,7 @@ html {
   transition: background-color var(--transition), color var(--transition);
 }
 
-/* === Hero-баннер на Home === */ 
+/* === Hero-баннер на Home === */
 .home-hero {
   height: 200px;
   background: var(--color-nav-bg);
@@ -700,9 +700,17 @@ html {
     padding-left: calc(var(--space-sm) * 2 + 1rem);
   }
 
-  /* 15.4 В мобильной версии делаем одну колонку Grid */
+  /* 15.4. Центрируем карточки Watchlist/Watched на мобильных */
   .movie-grid {
+    display: grid;
     grid-template-columns: 1fr;
+    justify-items: center;    /* центрируем карточки по горизонтали */
+    gap: var(--space-md);
+  }
+  .movie-grid .movie-card {
+    width: 100%;
+    max-width: 260px;         /* ограничиваем ширину карточки */
+    margin-bottom: var(--space-md);
   }
 }
 
