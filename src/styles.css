@@ -191,11 +191,10 @@ a {
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* === 4.2. Мобильное меню (спрятано по умолчанию) === */
+/* === 4.2. Мобильное меню (скрыто через visibility + opacity) === */
 .nav-links-mobile {
-  display: none;             /* появится при клике на гамбургер */
   position: absolute;
-  top: 52px;                 /* регулируем под высоту шапки */
+  top: 52px; /* регулируем под высоту шапки */
   right: var(--space-sm);
   background: var(--color-nav-bg);
   border-radius: var(--radius);
@@ -206,16 +205,16 @@ a {
   z-index: 1000;
 
   /* === Анимация: начальное состояние (скрыто + приподнято) === */
-  transform: translateY(-10px);
+  visibility: hidden;
   opacity: 0;
-  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
+  transform: translateY(-10px);
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out, visibility 0.25s ease-out;
 }
 
-/* Когда добавляется класс .open, меню плавно скользит вниз и становится непрозрачным */
 .nav-links-mobile.open {
-  display: block;
-  transform: translateY(0);
+  visibility: visible;
   opacity: 1;
+  transform: translateY(0);
 }
 
 /* Пункты меню */
@@ -228,6 +227,7 @@ a {
   font-size: 1rem;
   padding: 4px var(--space-sm);
   display: block;
+  transition: background var(--transition);
 }
 .nav-links-mobile li a:hover,
 .nav-links-mobile li a.active {
