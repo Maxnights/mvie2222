@@ -193,9 +193,9 @@ a {
 
 /* === 4.2. Мобильное меню (спрятано по умолчанию) === */
 .nav-links-mobile {
-  display: none; /* появится при клике на гамбургер */
+  display: none;             /* появится при клике на гамбургер */
   position: absolute;
-  top: 52px; /* регулируем под высоту шапки */
+  top: 52px;                 /* регулируем под высоту шапки */
   right: var(--space-sm);
   background: var(--color-nav-bg);
   border-radius: var(--radius);
@@ -204,10 +204,21 @@ a {
   padding: var(--space-sm) 0;
   min-width: 120px;
   z-index: 1000;
+
+  /* === Анимация: начальное состояние (скрыто + приподнято) === */
+  transform: translateY(-10px);
+  opacity: 0;
+  transition: transform 0.25s ease-out, opacity 0.25s ease-out;
 }
+
+/* Когда добавляется класс .open, меню плавно скользит вниз и становится непрозрачным */
 .nav-links-mobile.open {
   display: block;
+  transform: translateY(0);
+  opacity: 1;
 }
+
+/* Пункты меню */
 .nav-links-mobile li {
   margin: 2px 0;
   text-align: center;
