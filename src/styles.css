@@ -668,7 +668,7 @@ html {
 
   /* Мобильное меню */
   .nav-links-mobile {
-    left: 0;
+    left: 32px;
     width: 140px;
   }
 
