@@ -191,13 +191,15 @@ a {
   transform: translateY(-6px) rotate(-45deg);
 }
 
-/* === 4.2. Мобильное меню (скрыто через visibility + opacity, полупрозрачный фон) === */
+/* === 4.2. Мобильное меню (скрыто через visibility + opacity, сильный blur фона) === */
 .nav-links-mobile {
   position: absolute;
   top: 52px; /* регулируем под высоту шапки */
   right: var(--space-sm);
-  /* Фон светлой темы: rgba(31,27,36,0.85) */
-  background: rgba(31, 27, 36, 0.85);
+  /* Фон светлой темы: rgba(31,27,36,0.5) + blur */
+  background: rgba(31, 27, 36, 0.5);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   border-radius: var(--radius);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   list-style: none;
@@ -212,9 +214,11 @@ a {
   transition: transform 0.25s ease-out, opacity 0.25s ease-out, visibility 0.25s ease-out;
 }
 
-/* Для тёмной темы: полупрозрачный фон rgba(39,35,67,0.85) */
+/* Для тёмной темы: фон rgba(39,35,67,0.5) + blur */
 :root[data-theme="dark"] .nav-links-mobile {
-  background: rgba(39, 35, 67, 0.85);
+  background: rgba(39, 35, 67, 0.5);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 
 /* Когда добавляется класс .open, меню появляется плавно */
@@ -438,7 +442,7 @@ a {
 .skeleton-text-line.short {
   width: 40%;
 }
-.skeleton-text-line.long {
+.skeleton-text-line.long { 
   width: 80%;
 }
 
@@ -454,7 +458,7 @@ html {
   transition: background-color var(--transition), color var(--transition);
 }
 
-/* === Hero-баннер на Home === */
+/* === Hero-баннер на Home === */ 
 .home-hero {
   height: 200px;
   background: var(--color-nav-bg);
