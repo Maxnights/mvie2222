@@ -3,30 +3,30 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 
 export const Header = () => {
-  // Текущая тема (light|dark) из localStorage или 'light' по умолчанию
+  // Получаем тему из localStorage (или "light", если там ничего нет)
   const [theme, setTheme] = useState(
     localStorage.getItem("theme") || "light"
   );
-  // Состояние, открыто ли мобильное меню
+  // Состояние открытия/закрытия мобильного меню
   const [isOpen, setIsOpen] = useState(false);
 
-  // При изменении темы — устанавливаем атрибут data-theme и в localStorage
+  // При каждом изменении `theme` меняем data-атрибут у <html> и сохраняем в localStorage
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   }, [theme]);
 
-  // Переключатель темы
+  // Переключаем тему
   const toggleTheme = () => {
     setTheme((prev) => (prev === "light" ? "dark" : "light"));
   };
 
-  // Обработчик клика на гамбургер: показывает/скрывает мобильное меню
+  // Открываем/закрываем мобильное меню
   const toggleMobileMenu = () => {
     setIsOpen((prev) => !prev);
   };
 
-  // При клике на любую ссылку мобильного меню — сразу закрываем его
+  // По клику на любую ссылку мобильного меню сразу зарываем его
   const handleMobileLinkClick = () => {
     setIsOpen(false);
   };
@@ -34,29 +34,26 @@ export const Header = () => {
   return (
     <nav className="navbar">
       <div className="navbar-container container">
-        {/* Левый блок: логотип, переключатель темы, гамбургер */}
+        {/* Левый блок шапки: логотип, кнопка темы, гамбургер */}
         <div className="navbar-left">
           <h1 className="navbar-logo">MyMovies</h1>
 
-          {/* Кнопка переключения темы */}
           <button className="theme-toggle" onClick={toggleTheme}>
             <i className={`fas fa-${theme === "dark" ? "sun" : "moon"}`}></i>
           </button>
 
-          {/* Кнопка-гамбургер (будет видна только на экранах ≤640px) */}
           <button
             className={`hamburger${isOpen ? " open" : ""}`}
             onClick={toggleMobileMenu}
             aria-label={isOpen ? "Close menu" : "Open menu"}
           >
-            {/* Три полоски, которые превращаются в крестик при isOpen */}
             <span />
             <span />
             <span />
           </button>
         </div>
 
-        {/* Desktop-меню (автоматически скрывается стилями при ≤640px) */}
+        {/* Десктоп-меню: автоматически скрывается в мобильном (≤640px) */}
         <ul className="nav-links">
           <li className="nav-item">
             <NavLink
@@ -84,7 +81,7 @@ export const Header = () => {
           </li>
         </ul>
 
-        {/* Мобильное меню: показывает ссылки в колонку, когда isOpen === true */}
+        {/* Мобильное меню: выезжает, когда isOpen=true */}
         <ul className={`nav-links-mobile${isOpen ? " open" : ""}`}>
           <li>
             <NavLink
