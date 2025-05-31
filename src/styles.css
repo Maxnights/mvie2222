@@ -195,13 +195,13 @@ a {
 .nav-links-mobile {
   display: none; /* появится при клике на гамбургер */
   position: absolute;
-  top: 40px; /* регулируем под высоту шапки */
+  top: 50px; /* регулируем под высоту шапки */
   right: var(--space-sm);
   background: var(--color-nav-bg);
   border-radius: var(--radius);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   list-style: none;
-  padding: var(--space-md) 0;
+  padding: var(--space-sm) 0;
   min-width: 120px;
   z-index: 1000;
 }
