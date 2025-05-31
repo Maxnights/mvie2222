@@ -262,6 +262,19 @@ a {
   border-radius: 0;
 }
 
+/* === СКРУГЛЕНИЕ УГЛОВ ДЛЯ ACTIVE-пункта === */
+.nav-links-mobile li:first-child a.active {
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+}
+.nav-links-mobile li:last-child a.active {
+  border-bottom-left-radius: var(--radius);
+  border-bottom-right-radius: var(--radius);
+}
+.nav-links-mobile li:not(:first-child):not(:last-child) a.active {
+  border-radius: 0;
+}
+
 /* === 5. Карточка фильма (Glassmorphism) === */
 .movie-card {
   position: relative;
